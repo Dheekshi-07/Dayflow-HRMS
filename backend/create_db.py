@@ -1,0 +1,13 @@
+from app.database.connection import Base, engine
+
+# Import every model so SQLAlchemy knows about all tables
+from app.models.employee_profile import EmployeeProfile
+from app.models.attendance import Attendance
+from app.models.leave_type import LeaveType
+from app.models.leave_request import LeaveRequest
+from app.models.payroll import Payroll
+from app.models.document import Document
+
+Base.metadata.create_all(bind=engine)
+
+print("Database tables created successfully!")
