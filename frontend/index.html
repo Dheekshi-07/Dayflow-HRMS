@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HRFlow — Modern HR Management Platform</title>
+  <meta name="description" content="Professional HR Management SaaS Platform for Employees and HR Managers">
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- ============================================================
+       1. SPLASH / OPENING SCREEN
+       ============================================================ -->
+  <div id="splash-screen" class="splash-screen">
+    <div class="splash-content">
+      <div class="splash-logo">
+        <i class="bi bi-people-fill"></i>
+      </div>
+      <h1 class="splash-title">HRFlow</h1>
+      <p class="splash-subtitle">Enterprise Human Resource Management</p>
+      <div class="splash-progress">
+        <div id="splash-bar" class="splash-progress-bar"></div>
+      </div>
+      <div class="splash-loading-text">Loading portal resources...</div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       2. AUTHENTICATION SCREEN (LOGIN & SIGN UP)
+       ============================================================ -->
+  <div id="auth-screen" class="auth-screen" style="display: none;">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <i class="bi bi-building-gear"></i>
+      </div>
+      <h2 class="auth-title">Welcome to HRFlow</h2>
+      <p class="auth-subtitle" id="auth-subtitle-text">Sign in to access your employee or HR portal</p>
+
+      <!-- Auth Mode Switcher (Sign In vs Sign Up) -->
+      <div class="auth-mode-switch">
+        <button id="mode-btn-login" class="auth-mode-btn active" onclick="App.switchAuthMode('login')">
+          <i class="bi bi-box-arrow-in-right"></i> Sign In
+        </button>
+        <button id="mode-btn-signup" class="auth-mode-btn" onclick="App.switchAuthMode('signup')">
+          <i class="bi bi-person-plus-fill"></i> Sign Up (New Person)
+        </button>
+      </div>
+
+      <!-- ==================== SIGN IN CONTAINER ==================== -->
+      <div id="login-container">
+        <!-- Role Selection Tabs -->
+        <div class="role-tabs">
+          <button id="role-tab-emp" class="role-tab active" onclick="App.setRole('Employee')">
+            <i class="bi bi-person"></i> Employee Login
+          </button>
+          <button id="role-tab-hr" class="role-tab" onclick="App.setRole('HR')">
+            <i class="bi bi-shield-lock"></i> HR Login
+          </button>
+        </div>
+
+        <!-- Error Alert -->
+        <div id="login-error" class="alert alert-danger login-error">
+          <i class="bi bi-exclamation-circle-fill"></i>
+          <span>Invalid credentials</span>
+        </div>
+
+        <!-- Login Form -->
+        <form onsubmit="App.handleLogin(event)">
+          <div class="form-group">
+            <label class="form-label" for="login-username">User ID / Email</label>
+            <div class="form-input-wrapper">
+              <i class="form-input-icon bi bi-person"></i>
+              <input class="form-input" type="text" id="login-username" value="OIRASH20230003" placeholder="e.g. OIJODO20220001 or email@hrflow.com" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="login-password">Password</label>
+            <div class="form-input-wrapper">
+              <i class="form-input-icon bi bi-lock"></i>
+              <input class="form-input" type="password" id="login-password" value="emp123" placeholder="••••••••" required>
+              <button type="button" class="password-toggle" onclick="App.togglePasswordVisibility('login-password', 'password-toggle-icon')" title="Toggle password visibility">
+                <i id="password-toggle-icon" class="bi bi-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-check">
+              <input type="checkbox" id="remember-me" checked>
+              <label for="remember-me">Remember me</label>
+            </div>
+            <a href="#" class="forgot-link" onclick="App.showToast('Password reset link sent to registered email.', 'info'); return false;">Forgot Password?</a>
+          </div>
+
+          <button type="submit" id="login-submit-btn" class="btn btn-primary btn-block btn-lg">
+            <span class="btn-text">Sign In to Dashboard <i class="bi bi-arrow-right"></i></span>
+          </button>
+        </form>
+
+        <!-- Quick Demo Credentials Hint -->
+        <div class="demo-creds">
+          <div class="demo-creds-title"><i class="bi bi-key-fill text-warning"></i> Quick Demo Logins:</div>
+          <div class="demo-cred-row">
+            <button class="demo-cred-btn" onclick="App.setDemoCreds('OIRASH20230003', 'emp123', 'Employee')">
+              <strong>Employee:</strong> OIRASH20230003 / emp123
+            </button>
+            <button class="demo-cred-btn" onclick="App.setDemoCreds('OIANKR20220001', 'hr123', 'HR')">
+              <strong>HR Manager:</strong> OIANKR20220001 / hr123
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== SIGN UP CONTAINER ==================== -->
+      <div id="signup-container" style="display: none;">
+        <!-- Registration Error Alert -->
+        <div id="signup-error" class="alert alert-danger login-error">
+          <i class="bi bi-exclamation-circle-fill"></i>
+          <span>Registration failed</span>
+        </div>
+
+        <form onsubmit="App.handleSignUp(event)">
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label" for="signup-firstname">First Name *</label>
+              <input class="form-input-no-icon" type="text" id="signup-firstname" placeholder="e.g. John" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="signup-lastname">Last Name *</label>
+              <input class="form-input-no-icon" type="text" id="signup-lastname" placeholder="e.g. Doe" required>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label" for="signup-role">Portal Role *</label>
+              <select class="form-select" id="signup-role" required>
+                <option value="Employee" selected>Employee</option>
+                <option value="HR">HR Manager</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="signup-department">Department *</label>
+              <select class="form-select" id="signup-department" required>
+                <option value="Engineering">Engineering</option>
+                <option value="Design">Design</option>
+                <option value="Marketing">Marketing</option>
+                <option value="Finance">Finance</option>
+                <option value="Sales">Sales</option>
+                <option value="Human Resources">Human Resources</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label" for="signup-designation">Designation *</label>
+              <input class="form-input-no-icon" type="text" id="signup-designation" placeholder="e.g. Software Engineer" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="signup-year">Joining Year *</label>
+              <input class="form-input-no-icon" type="number" id="signup-year" value="2026" min="2000" max="2030" required>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label" for="signup-email">Personal Email *</label>
+              <input class="form-input-no-icon" type="email" id="signup-email" placeholder="john.doe@gmail.com" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="signup-phone">Phone Number *</label>
+              <input class="form-input-no-icon" type="tel" id="signup-phone" placeholder="+91 98765 43210" required>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label" for="signup-password">Password *</label>
+              <input class="form-input-no-icon" type="password" id="signup-password" placeholder="Minimum 6 characters" required minlength="6">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="signup-confirm-password">Confirm Password *</label>
+              <input class="form-input-no-icon" type="password" id="signup-confirm-password" placeholder="Repeat password" required minlength="6">
+            </div>
+          </div>
+
+          <div class="alert alert-info" style="margin-bottom: 1.25rem;">
+            <i class="bi bi-info-circle-fill"></i>
+            <span>Your Login ID will be generated as <strong>OI + First2 + Last2 + Year + Serial</strong> (e.g. <code>OIJODO20260011</code>).</span>
+          </div>
+
+          <button type="submit" id="signup-submit-btn" class="btn btn-primary btn-block btn-lg">
+            <span class="btn-text"><i class="bi bi-person-check-fill"></i> Register & Create Account</span>
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================
+       3. MAIN APPLICATION SHELL
+       ============================================================ -->
+  <div id="app-shell" class="app-shell">
+    
+    <!-- Sidebar Overlay for Mobile -->
+    <div id="sidebar-overlay" class="sidebar-overlay" onclick="App.closeMobileSidebar()"></div>
+
+    <!-- Left Sidebar Navigation -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <i class="bi bi-people-fill"></i>
+        </div>
+        <div class="sidebar-brand">
+          HRFlow
+          <span>ENTERPRISE PORTAL</span>
+        </div>
+      </div>
+
+      <div class="sidebar-nav" id="sidebar-nav">
+        <!-- Rendered dynamically by App.renderSidebar() -->
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-info">
+          <div class="sidebar-avatar" id="sidebar-user-avatar">RS</div>
+          <div style="flex: 1; min-width: 0;">
+            <div class="sidebar-user-name" id="sidebar-user-name">Rahul Sharma</div>
+            <div class="sidebar-user-role" id="sidebar-user-role">Employee • EMP001</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="App.logout()" title="Sign Out">
+            <i class="bi bi-box-arrow-right" style="font-size: 1.125rem; color: var(--danger);"></i>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+      
+      <!-- Topbar Header -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="topbar-toggle" onclick="App.toggleMobileSidebar()">
+            <i class="bi bi-list"></i>
+          </button>
+          <div class="topbar-breadcrumb">
+            Dashboard / <span id="topbar-breadcrumb-title">Employee Portal</span>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <button class="topbar-icon-btn" onclick="App.showToast('You have no new urgent notifications.', 'info')" title="Notifications">
+            <i class="bi bi-bell"></i>
+            <span class="notif-dot"></span>
+          </button>
+
+          <div class="topbar-profile" onclick="App.navigate(App.currentUser.role === 'Employee' ? 'emp-profile' : 'hr-profile')">
+            <div class="topbar-profile-avatar" id="topbar-avatar">RS</div>
+            <div>
+              <div class="topbar-profile-name" id="topbar-name">Rahul Sharma</div>
+              <div class="topbar-profile-role" id="topbar-role">Software Engineer</div>
+            </div>
+          </div>
+
+          <button class="btn btn-outline-primary btn-sm" onclick="App.logout()">
+            <i class="bi bi-power"></i> Logout
+          </button>
+        </div>
+      </header>
+
+      <!-- Dynamic Page Viewport -->
+      <main class="page-container" id="page-viewport">
+        <!-- Rendered dynamically by App.navigate() -->
+      </main>
+    </div>
+  </div>
+
+  <!-- Modal Container Root -->
+  <div id="modal-root"></div>
+
+  <!-- Toast Notification Root -->
+  <div id="toast-root" class="toast-container"></div>
+
+  <!-- Chart.js Dependency -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Application Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/employee-views.js"></script>
+  <script src="js/hr-views.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
