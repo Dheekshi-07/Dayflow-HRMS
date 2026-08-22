@@ -6,7 +6,7 @@ from app.routers.leave import router as leave_router
 from app.routers.payroll import router as payroll_router
 from app.routers.documents import router as documents_router
 from app.routers.auth import router as auth_router
-
+from app.routers.admin import router as admin_router
 app = FastAPI(
     title="Dayflow HRMS API",
     description="Human Resource Management System Backend",
@@ -20,7 +20,7 @@ app.include_router(leave_router)
 app.include_router(payroll_router)
 app.include_router(documents_router)
 app.include_router(auth_router)
-
+app.include_router(admin_router)
 @app.get("/")
 def root():
     return {

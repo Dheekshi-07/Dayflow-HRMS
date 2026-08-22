@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     COMPANY_CODE: str = "OI"
 
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file="/Users/shreedvarshan/Desktop/Dayflow-HRMS/backend/.env",
         env_file_encoding="utf-8"
     )
 
