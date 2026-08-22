@@ -1,7 +1,7 @@
 /* ============================================================
    Dayflow HRMS — Main Application Controller
-   Routing, Authentication, Navigation, Session, Toast & Modals
-   Backend API Integration
+   Frontend Demo Mode
+   Backend is NOT required for login/demo video
    ============================================================ */
 
 const API_BASE_URL = 'http://127.0.0.1:8000/api';
@@ -194,6 +194,10 @@ const App = {
     }
   },
 
+  /* ============================================================
+     DEMO CREDENTIALS
+     ============================================================ */
+
   setDemoCreds(userId, password, role) {
     this.switchAuthMode('login');
 
@@ -213,6 +217,10 @@ const App = {
       passwordField.value = password;
     }
   },
+
+  /* ============================================================
+     PASSWORD VISIBILITY
+     ============================================================ */
 
   togglePasswordVisibility(
     fieldId = 'login-password',
@@ -238,23 +246,17 @@ const App = {
   },
 
   /* ============================================================
-     LOGIN — FASTAPI BACKEND
+     LOGIN — FRONTEND DEMO MODE
      ============================================================ */
 
   async handleLogin(event) {
     event.preventDefault();
 
-    const username =
-      document
-        .getElementById('login-username')
-        .value
-        .trim();
+    const usernameElement =
+      document.getElementById('login-username');
 
-    const password =
-      document
-        .getElementById('login-password')
-        .value
-        .trim();
+    const passwordElement =
+      document.getElementById('login-password');
 
     const errorAlert =
       document.getElementById('login-error');
@@ -262,7 +264,19 @@ const App = {
     const button =
       document.getElementById('login-submit-btn');
 
-    /* Validate fields */
+    const username =
+      usernameElement
+        ? usernameElement.value.trim()
+        : '';
+
+    const password =
+      passwordElement
+        ? passwordElement.value.trim()
+        : '';
+
+    /* ----------------------------------------------------------
+       Validate
+       ---------------------------------------------------------- */
 
     if (!username || !password) {
       if (errorAlert) {
@@ -283,207 +297,210 @@ const App = {
       button.classList.add('loading');
     }
 
-    try {
-      console.log('Sending login request to backend...');
+    /* ----------------------------------------------------------
+       FRONTEND DEMO USERS
 
-      const response = await fetch(
-        `${API_BASE_URL}/auth/login`,
-        {
-          method: 'POST',
+       No FastAPI.
+       No PostgreSQL.
+       No bcrypt.
+       No backend request.
+       ---------------------------------------------------------- */
 
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
+    const demoUsers = {
 
-          body: JSON.stringify({
-            login_id: username,
-            password: password
-          })
-        }
-      );
+      /* Employee */
 
-      console.log(
-        'Login response status:',
-        response.status
-      );
+      employee: {
+        id: 'OIRASH20230003',
+        password: 'emp123',
+        role: 'Employee',
+        name: 'Rashmi',
+        email: 'rashmi@dayflow.com',
+        designation: 'Software Engineer',
+        department: 'Engineering'
+      },
 
-      let data;
+      /* HR */
 
-      try {
-        data = await response.json();
-      } catch (jsonError) {
-        throw new Error(
-          'Invalid response received from backend.'
-        );
+      hr: {
+        id: 'OIANKR20220001',
+        password: 'hr123',
+        role: 'HR',
+        name: 'Ankur',
+        email: 'ankur@dayflow.com',
+        designation: 'HR Manager',
+        department: 'Human Resources'
+      },
+
+      /* Existing employee from your database */
+
+      john: {
+        id: 'OIJOSM20260001',
+        password: 'test123',
+        role: 'Employee',
+        name: 'John Smith',
+        email: 'john.smith@test.com',
+        designation: 'Software Engineer',
+        department: 'Engineering'
       }
 
-      console.log('Login response:', data);
+    };
 
-      /* Backend returned an error */
+    let loggedInUser = null;
 
-      if (!response.ok) {
-        let message =
-          'Invalid login credentials.';
+    /* ----------------------------------------------------------
+       Employee login
+       ---------------------------------------------------------- */
 
-        if (data.detail) {
-          if (typeof data.detail === 'string') {
-            message = data.detail;
-          } else {
-            message = JSON.stringify(data.detail);
-          }
-        }
+    if (
+      username === demoUsers.employee.id &&
+      password === demoUsers.employee.password
+    ) {
+      loggedInUser = demoUsers.employee;
+    }
 
-        throw new Error(message);
+    /* ----------------------------------------------------------
+       HR login
+       ---------------------------------------------------------- */
+
+    if (
+      username === demoUsers.hr.id &&
+      password === demoUsers.hr.password
+    ) {
+      loggedInUser = demoUsers.hr;
+    }
+
+    /* ----------------------------------------------------------
+       John login
+       ---------------------------------------------------------- */
+
+    if (
+      username === demoUsers.john.id &&
+      password === demoUsers.john.password
+    ) {
+      loggedInUser = demoUsers.john;
+    }
+
+    /* ----------------------------------------------------------
+       Invalid login
+       ---------------------------------------------------------- */
+
+    if (!loggedInUser) {
+
+      if (errorAlert) {
+        errorAlert.textContent =
+          'Invalid demo login. Use Employee: OIRASH20230003 / emp123 or HR: OIANKR20220001 / hr123';
+
+        errorAlert.classList.add('show');
       }
 
-      /* ========================================================
-         Convert backend role to frontend role
-         Backend:
-         admin / employee
-
-         Frontend:
-         HR / Employee
-         ======================================================== */
-
-      let frontendRole = 'Employee';
-
-      if (
-        data.role === 'admin' ||
-        data.role === 'HR' ||
-        data.role === 'hr'
-      ) {
-        frontendRole = 'HR';
-      }
-
-      /* ========================================================
-         Create frontend session
-         ======================================================== */
-
-      this.currentUser = {
-        id: data.employee_id || username,
-
-        role: frontendRole,
-
-        backendRole: data.role,
-
-        must_change_password:
-          data.must_change_password || false,
-
-        name:
-          data.name ||
-          data.employee_name ||
-          data.employee_id ||
-          username,
-
-        email:
-          data.email || username,
-
-        designation:
-          data.designation || frontendRole,
-
-        department:
-          data.department || '',
-
-        avatar:
-          data.avatar ||
-          (
-            data.employee_id ||
-            username
-          ).substring(0, 2).toUpperCase()
-      };
-
-      /* ========================================================
-         Verify selected role
-         ======================================================== */
-
-      if (
-        this.selectedRole &&
-        this.selectedRole !== frontendRole
-      ) {
-        if (errorAlert) {
-          errorAlert.textContent =
-            `Access denied. This account belongs to the ${frontendRole} role.`;
-
-          errorAlert.classList.add('show');
-        }
-
-        this.clearSession();
-
-        return;
-      }
-
-      /* ========================================================
-         Save login session
-         ======================================================== */
-
-      this.selectedRole = frontendRole;
-
-      this.saveSession();
-
-      /* ========================================================
-         Success
-         ======================================================== */
-
-      this.showToast(
-        data.message || 'Login successful!',
-        'success'
-      );
-
-      /* ========================================================
-         Open dashboard
-         ======================================================== */
-
-      this.showAppShell();
-
-    } catch (error) {
-      console.error(
-        'Login error:',
-        error
-      );
-
-      if (error.name === 'TypeError') {
-        if (errorAlert) {
-          errorAlert.textContent =
-            'Unable to connect to the backend. Make sure FastAPI is running on port 8000.';
-          errorAlert.classList.add('show');
-        }
-      } else {
-        if (errorAlert) {
-          errorAlert.textContent =
-            error.message ||
-            'Unable to login. Please try again.';
-
-          errorAlert.classList.add('show');
-        }
-      }
-
-    } finally {
       if (button) {
         button.classList.remove('loading');
       }
+
+      return;
+    }
+
+    /* ----------------------------------------------------------
+       Role verification
+       ---------------------------------------------------------- */
+
+    if (
+      this.selectedRole &&
+      this.selectedRole !== loggedInUser.role
+    ) {
+
+      if (errorAlert) {
+        errorAlert.textContent =
+          `Access denied. This account belongs to the ${loggedInUser.role} role.`;
+
+        errorAlert.classList.add('show');
+      }
+
+      if (button) {
+        button.classList.remove('loading');
+      }
+
+      return;
+    }
+
+    /* ----------------------------------------------------------
+       Create local frontend session
+       ---------------------------------------------------------- */
+
+    this.currentUser = {
+
+      id: loggedInUser.id,
+
+      role: loggedInUser.role,
+
+      backendRole:
+        loggedInUser.role === 'HR'
+          ? 'admin'
+          : 'employee',
+
+      must_change_password: false,
+
+      name: loggedInUser.name,
+
+      email: loggedInUser.email,
+
+      designation: loggedInUser.designation,
+
+      department: loggedInUser.department,
+
+      avatar:
+        loggedInUser.name
+          .substring(0, 2)
+          .toUpperCase()
+
+    };
+
+    /* ----------------------------------------------------------
+       Save session
+       ---------------------------------------------------------- */
+
+    this.selectedRole =
+      loggedInUser.role;
+
+    this.saveSession();
+
+    /* ----------------------------------------------------------
+       Success message
+       ---------------------------------------------------------- */
+
+    this.showToast(
+      'Login successful!',
+      'success'
+    );
+
+    /* ----------------------------------------------------------
+       Open dashboard
+       ---------------------------------------------------------- */
+
+    setTimeout(() => {
+      this.showAppShell();
+    }, 300);
+
+    if (button) {
+      button.classList.remove('loading');
     }
   },
 
   /* ============================================================
      SIGN UP
-     
-     NOTE:
-     Registration will be connected to the backend separately.
-     For now this function prevents the old MockData registration
-     from being used accidentally.
      ============================================================ */
 
   async handleSignUp(event) {
     event.preventDefault();
 
     this.showToast(
-      'Registration API integration is not connected yet.',
+      'Demo mode: Registration is currently disabled.',
       'warning'
     );
 
     console.log(
-      'TODO: Connect this form to the FastAPI registration endpoint.'
+      'Registration is disabled in frontend demo mode.'
     );
   },
 
@@ -499,7 +516,9 @@ const App = {
       'info'
     );
 
-    this.showAuthScreen();
+    setTimeout(() => {
+      this.showAuthScreen();
+    }, 300);
   },
 
   /* ============================================================
@@ -507,6 +526,7 @@ const App = {
      ============================================================ */
 
   showAppShell() {
+
     const authScreen =
       document.getElementById('auth-screen');
 
@@ -524,14 +544,22 @@ const App = {
     shell.classList.add('active');
 
     this.renderSidebar();
+
     this.renderHeader();
 
     /* Open dashboard according to role */
 
-    if (this.currentUser.role === 'Employee') {
+    if (
+      this.currentUser &&
+      this.currentUser.role === 'Employee'
+    ) {
+
       this.navigate('emp-dashboard');
+
     } else {
+
       this.navigate('hr-dashboard');
+
     }
   },
 
@@ -540,6 +568,7 @@ const App = {
      ============================================================ */
 
   renderSidebar() {
+
     if (!this.currentUser) {
       return;
     }
@@ -549,124 +578,160 @@ const App = {
 
     const links = isEmployee
       ? [
+
           {
             view: 'emp-dashboard',
             icon: 'speedometer2',
             label: 'Dashboard'
           },
+
           {
             view: 'emp-profile',
             icon: 'person-badge',
             label: 'Profile'
           },
+
           {
             view: 'emp-work-history',
             icon: 'clock-history',
             label: 'Work History'
           },
+
           {
             view: 'emp-attendance',
             icon: 'calendar-check',
             label: 'Attendance'
           },
+
           {
             view: 'emp-leave',
             icon: 'calendar2-minus',
             label: 'Leave'
           },
+
           {
             view: 'emp-mail',
             icon: 'envelope',
             label: 'Work Mail'
           },
+
           {
             view: 'emp-assignments',
             icon: 'card-checklist',
             label: 'Assignments'
           }
+
         ]
+
       : [
+
           {
             view: 'hr-dashboard',
             icon: 'speedometer2',
             label: 'Dashboard'
           },
+
           {
             view: 'hr-profile',
             icon: 'person-badge',
             label: 'Profile'
           },
+
           {
             view: 'hr-employees',
             icon: 'people',
             label: 'Employees'
           },
+
           {
             view: 'hr-assignments',
             icon: 'card-checklist',
             label: 'Assignments'
           },
+
           {
             view: 'hr-work-mail',
             icon: 'envelope',
             label: 'Work Mail'
           },
+
           {
             view: 'hr-leave',
             icon: 'calendar2-minus',
             label: 'Leave Requests'
           },
+
           {
             view: 'hr-permission-mail',
             icon: 'file-earmark-text',
             label: 'Permission Mail'
           },
+
           {
             view: 'hr-reports',
             icon: 'bar-chart-line',
             label: 'Reports'
           },
+
           {
             view: 'hr-settings',
             icon: 'gear',
             label: 'Settings'
           }
+
         ];
 
-    const linksHTML = links
-      .map(link => `
-        <button
-          class="sidebar-link ${
-            this.currentView === link.view
-              ? 'active'
-              : ''
-          }"
-          onclick="App.navigate('${link.view}')"
-        >
-          <i class="bi bi-${link.icon}"></i>
-          <span>${link.label}</span>
-        </button>
-      `)
-      .join('');
+    const linksHTML =
+      links
+        .map(link => `
+
+          <button
+            class="sidebar-link ${
+              this.currentView === link.view
+                ? 'active'
+                : ''
+            }"
+            onclick="App.navigate('${link.view}')"
+          >
+
+            <i class="bi bi-${link.icon}"></i>
+
+            <span>
+              ${link.label}
+            </span>
+
+          </button>
+
+        `)
+        .join('');
 
     const sidebarNav =
-      document.getElementById('sidebar-nav');
+      document.getElementById(
+        'sidebar-nav'
+      );
 
     if (sidebarNav) {
+
       sidebarNav.innerHTML = `
+
         <div class="sidebar-label">
+
           ${
             isEmployee
               ? 'Employee Portal'
               : 'HR Management'
           }
+
         </div>
 
         ${linksHTML}
+
       `;
     }
 
-    /* Sidebar user information */
+    /* ----------------------------------------------------------
+       Sidebar user
+       ---------------------------------------------------------- */
 
     const avatar =
       document.getElementById(
@@ -684,21 +749,27 @@ const App = {
       );
 
     if (avatar) {
+
       avatar.textContent =
         this.currentUser.avatar ||
         this.currentUser.name
           .substring(0, 2)
           .toUpperCase();
+
     }
 
     if (name) {
+
       name.textContent =
         this.currentUser.name;
+
     }
 
     if (role) {
+
       role.textContent =
         `${this.currentUser.role} • ${this.currentUser.id}`;
+
     }
   },
 
@@ -707,36 +778,49 @@ const App = {
      ============================================================ */
 
   renderHeader() {
+
     if (!this.currentUser) {
       return;
     }
 
     const avatar =
-      document.getElementById('topbar-avatar');
+      document.getElementById(
+        'topbar-avatar'
+      );
 
     const name =
-      document.getElementById('topbar-name');
+      document.getElementById(
+        'topbar-name'
+      );
 
     const role =
-      document.getElementById('topbar-role');
+      document.getElementById(
+        'topbar-role'
+      );
 
     if (avatar) {
+
       avatar.textContent =
         this.currentUser.avatar ||
         this.currentUser.name
           .substring(0, 2)
           .toUpperCase();
+
     }
 
     if (name) {
+
       name.textContent =
         this.currentUser.name;
+
     }
 
     if (role) {
+
       role.textContent =
         this.currentUser.designation ||
         this.currentUser.role;
+
     }
   },
 
@@ -745,8 +829,11 @@ const App = {
      ============================================================ */
 
   toggleMobileSidebar() {
+
     const sidebar =
-      document.getElementById('sidebar');
+      document.getElementById(
+        'sidebar'
+      );
 
     const overlay =
       document.getElementById(
@@ -763,8 +850,11 @@ const App = {
   },
 
   closeMobileSidebar() {
+
     const sidebar =
-      document.getElementById('sidebar');
+      document.getElementById(
+        'sidebar'
+      );
 
     const overlay =
       document.getElementById(
@@ -785,6 +875,7 @@ const App = {
      ============================================================ */
 
   navigate(viewId) {
+
     if (!this.currentUser) {
       return;
     }
@@ -795,12 +886,13 @@ const App = {
     const isHRView =
       viewId.startsWith('hr-');
 
-    /* Employee cannot access HR pages */
+    /* Employee cannot access HR */
 
     if (
       this.currentUser.role === 'Employee' &&
       isHRView
     ) {
+
       this.showToast(
         'Access Denied. You do not have permission to view HR pages.',
         'error'
@@ -809,12 +901,13 @@ const App = {
       return;
     }
 
-    /* HR cannot access Employee pages */
+    /* HR cannot access Employee */
 
     if (
       this.currentUser.role === 'HR' &&
       isEmployeeView
     ) {
+
       this.showToast(
         'Access Denied. Please use HR portal features.',
         'error'
@@ -823,7 +916,8 @@ const App = {
       return;
     }
 
-    this.currentView = viewId;
+    this.currentView =
+      viewId;
 
     this.closeMobileSidebar();
 
@@ -840,7 +934,9 @@ const App = {
 
     window.scrollTo(0, 0);
 
-    /* Breadcrumb */
+    /* ----------------------------------------------------------
+       Breadcrumb
+       ---------------------------------------------------------- */
 
     const breadcrumb =
       document.getElementById(
@@ -848,6 +944,7 @@ const App = {
       );
 
     const titleMap = {
+
       'emp-dashboard':
         'Employee Dashboard',
 
@@ -901,15 +998,20 @@ const App = {
 
       'hr-settings':
         'System Settings'
+
     };
 
     if (breadcrumb) {
+
       breadcrumb.textContent =
         titleMap[viewId] ||
         'Dashboard';
+
     }
 
-    /* Render view */
+    /* ----------------------------------------------------------
+       Render selected view
+       ---------------------------------------------------------- */
 
     let html = '';
 
@@ -919,127 +1021,166 @@ const App = {
     switch (viewId) {
 
       case 'emp-dashboard':
+
         html =
           EmployeeViews.renderDashboard(
             employee
           );
+
         break;
 
       case 'emp-profile':
+
         html =
           EmployeeViews.renderProfile(
             employee
           );
+
         break;
 
       case 'emp-edit-profile':
+
         html =
           EmployeeViews.renderEditProfile(
             employee
           );
+
         break;
 
       case 'emp-work-history':
+
         html =
           EmployeeViews.renderWorkHistory(
             employee
           );
+
         break;
 
       case 'emp-attendance':
+
         html =
           EmployeeViews.renderAttendance(
             employee
           );
+
         break;
 
       case 'emp-leave':
+
         html =
           EmployeeViews.renderLeave(
             employee
           );
+
         break;
 
       case 'emp-mail':
+
         html =
           EmployeeViews.renderWorkMail(
             employee
           );
+
         break;
 
       case 'emp-assignments':
+
         html =
           EmployeeViews.renderAssignments(
             employee
           );
+
         break;
 
       case 'hr-dashboard':
+
         html =
           HRViews.renderDashboard(
             employee
           );
+
         break;
 
       case 'hr-profile':
+
         html =
           HRViews.renderProfile(
             employee
           );
+
         break;
 
       case 'hr-employees':
+
         html =
           HRViews.renderEmployees();
+
         break;
 
       case 'hr-employee-details':
+
         html =
           HRViews.renderEmployeeDetails();
+
         break;
 
       case 'hr-assignments':
+
         html =
           HRViews.renderAssignments();
+
         break;
 
       case 'hr-work-mail':
+
         html =
           HRViews.renderWorkMail();
+
         break;
 
       case 'hr-leave':
+
         html =
           HRViews.renderLeaveManagement();
+
         break;
 
       case 'hr-permission-mail':
+
         html =
           HRViews.renderPermissionMail();
+
         break;
 
       case 'hr-reports':
+
         html =
           HRViews.renderReports();
+
         break;
 
       case 'hr-settings':
+
         html =
           HRViews.renderSettings();
+
         break;
 
       default:
+
         html =
           Components.EmptyState({
             title: 'Page not found'
           });
+
     }
 
-    viewport.innerHTML = html;
+    viewport.innerHTML =
+      html;
 
-    /* ========================================================
+    /* ----------------------------------------------------------
        Charts
-       ======================================================== */
+       ---------------------------------------------------------- */
 
     setTimeout(() => {
 
@@ -1048,15 +1189,11 @@ const App = {
         typeof Charts !== 'undefined'
       ) {
 
-        /*
-         * Keep MockData temporarily for the UI.
-         * Attendance API integration can be added next.
-         */
-
         if (
           typeof MockData !== 'undefined' &&
           MockData.getAttendance
         ) {
+
           const data =
             MockData.getAttendance(
               employee.id
@@ -1086,10 +1223,12 @@ const App = {
           typeof MockData !== 'undefined' &&
           MockData.getEmployees
         ) {
+
           Charts.renderDepartmentChart(
             'chart-hr-dept',
             MockData.getEmployees()
           );
+
         }
       }
 
@@ -1114,6 +1253,7 @@ const App = {
       typeof Components === 'undefined' ||
       !Components.Modal
     ) {
+
       console.error(
         'Components.Modal is not available.'
       );
@@ -1156,7 +1296,12 @@ const App = {
     }, 10);
   },
 
+  /* ============================================================
+     CLOSE MODAL
+     ============================================================ */
+
   closeModal(id) {
+
     const modal =
       document.getElementById(id);
 
@@ -1164,7 +1309,9 @@ const App = {
       return;
     }
 
-    modal.classList.remove('active');
+    modal.classList.remove(
+      'active'
+    );
 
     setTimeout(() => {
 
@@ -1194,12 +1341,15 @@ const App = {
     }
 
     const toast =
-      document.createElement('div');
+      document.createElement(
+        'div'
+      );
 
     toast.className =
       `toast ${type}`;
 
     const iconMap = {
+
       success:
         'check-circle-fill',
 
@@ -1211,9 +1361,11 @@ const App = {
 
       info:
         'info-circle-fill'
+
     };
 
     toast.innerHTML = `
+
       <i class="toast-icon bi bi-${
         iconMap[type] ||
         'info-circle-fill'
@@ -1227,11 +1379,16 @@ const App = {
         class="toast-close"
         onclick="this.parentElement.remove()"
       >
+
         <i class="bi bi-x"></i>
+
       </button>
+
     `;
 
-    container.appendChild(toast);
+    container.appendChild(
+      toast
+    );
 
     setTimeout(() => {
 
@@ -1240,7 +1397,9 @@ const App = {
       );
 
       setTimeout(() => {
+
         toast.remove();
+
       }, 300);
 
     }, 3500);
@@ -1250,7 +1409,9 @@ const App = {
      MOCK DATA COMPATIBILITY
      ============================================================ */
 
-  updateUserInMockData(updatedUser) {
+  updateUserInMockData(
+    updatedUser
+  ) {
 
     if (
       typeof MockData === 'undefined' ||
@@ -1268,11 +1429,16 @@ const App = {
     if (index !== -1) {
 
       MockData.users[index] = {
+
         ...MockData.users[index],
+
         ...updatedUser
+
       };
+
     }
   }
+
 };
 
 
@@ -1283,6 +1449,8 @@ const App = {
 document.addEventListener(
   'DOMContentLoaded',
   () => {
+
     App.init();
+
   }
 );
