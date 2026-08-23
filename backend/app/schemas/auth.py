@@ -26,6 +26,13 @@ class LoginResponse(BaseModel):
     role: str
     must_change_password: bool
 
+    first_name: str
+    last_name: str
+    email: str
+    phone: str | None = None
+    address: str | None = None
+    designation: str | None = None
+    department: str | None = None
 
 class ChangePasswordRequest(BaseModel):
     login_id: str

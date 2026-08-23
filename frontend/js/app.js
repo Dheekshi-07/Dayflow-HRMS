@@ -1,12 +1,10 @@
 /* ============================================================
    Dayflow HRMS — Main Application Controller
-   Frontend Demo Mode
-   Backend is NOT required for login/demo video
+   Real Backend API Integration
    ============================================================ */
 
-const API_BASE_URL = 'http://127.0.0.1:8000/api';
-
 const App = {
+
   currentUser: null,
   selectedRole: 'Employee',
   currentView: 'dashboard',
@@ -15,66 +13,117 @@ const App = {
      INITIALIZATION
      ============================================================ */
 
-  init() {
-    this.runSplashScreen(() => {
-      this.checkSession();
-    });
-  },
+  async init() {
+
+  this.runSplashScreen(async () => {
+
+    await this.checkSession();
+
+  });
+
+},
 
   /* ============================================================
      SPLASH SCREEN
      ============================================================ */
 
   runSplashScreen(callback) {
-    const splash = document.getElementById('splash-screen');
-    const bar = document.getElementById('splash-bar');
+
+    const splash =
+      document.getElementById('splash-screen');
+
+    const bar =
+      document.getElementById('splash-bar');
 
     if (!splash || !bar) {
-      if (callback) callback();
+
+      if (callback) {
+        callback();
+      }
+
       return;
     }
 
     let progress = 0;
 
-    const interval = setInterval(() => {
-      progress += 10;
-      bar.style.width = `${progress}%`;
+    const interval =
+      setInterval(() => {
 
-      if (progress >= 100) {
-        clearInterval(interval);
+        progress += 10;
 
-        setTimeout(() => {
-          splash.classList.add('fade-out');
+        bar.style.width =
+          `${progress}%`;
+
+        if (progress >= 100) {
+
+          clearInterval(interval);
 
           setTimeout(() => {
-            splash.style.display = 'none';
 
-            if (callback) {
-              callback();
-            }
-          }, 500);
-        }, 200);
-      }
-    }, 40);
+            splash.classList.add(
+              'fade-out'
+            );
+
+            setTimeout(() => {
+
+              splash.style.display =
+                'none';
+
+              if (callback) {
+                callback();
+              }
+
+            }, 500);
+
+          }, 200);
+
+        }
+
+      }, 40);
   },
 
   /* ============================================================
      SESSION MANAGEMENT
      ============================================================ */
 
-  checkSession() {
-    const session = localStorage.getItem('hrflow_session');
+  async checkSession() {
+
+    const session =
+      localStorage.getItem(
+        'hrflow_session'
+      );
 
     if (session) {
-      try {
-        this.currentUser = JSON.parse(session);
-        this.selectedRole = this.currentUser.role;
 
-        this.showAppShell();
-        return;
+      try {
+
+        this.currentUser =
+  JSON.parse(session);
+
+this.selectedRole =
+  this.currentUser.role;
+
+/*
+ * Load REAL backend data before opening
+ * the application.
+ */
+await MockData.load();
+
+this.showAppShell();
+
+return;
+
       } catch (error) {
-        console.error('Invalid saved session:', error);
-        localStorage.removeItem('hrflow_session');
+
+        console.error(
+          'Invalid saved session:',
+          error
+        );
+
+        localStorage.removeItem(
+          'hrflow_session'
+        );
+
       }
     }
 
@@ -82,17 +131,27 @@ const App = {
   },
 
   saveSession() {
+
     if (this.currentUser) {
+
       localStorage.setItem(
         'hrflow_session',
-        JSON.stringify(this.currentUser)
+        JSON.stringify(
+          this.currentUser
+        )
       );
+
     }
   },
 
   clearSession() {
+
     this.currentUser = null;
-    localStorage.removeItem('hrflow_session');
+
+    localStorage.removeItem(
+      'hrflow_session'
+    );
+
   },
 
   /* ============================================================
@@ -100,35 +159,61 @@ const App = {
      ============================================================ */
 
   showAuthScreen() {
-    const authScreen = document.getElementById('auth-screen');
-    const appShell = document.getElementById('app-shell');
+
+    const authScreen =
+      document.getElementById(
+        'auth-screen'
+      );
+
+    const appShell =
+      document.getElementById(
+        'app-shell'
+      );
 
     if (authScreen) {
-      authScreen.style.display = 'flex';
+
+      authScreen.style.display =
+        'flex';
+
     }
 
     if (appShell) {
-      appShell.classList.remove('active');
+
+      appShell.classList.remove(
+        'active'
+      );
+
     }
 
     this.switchAuthMode('login');
   },
 
   switchAuthMode(mode) {
+
     const loginContainer =
-      document.getElementById('login-container');
+      document.getElementById(
+        'login-container'
+      );
 
     const signupContainer =
-      document.getElementById('signup-container');
+      document.getElementById(
+        'signup-container'
+      );
 
     const loginBtn =
-      document.getElementById('mode-btn-login');
+      document.getElementById(
+        'mode-btn-login'
+      );
 
     const signupBtn =
-      document.getElementById('mode-btn-signup');
+      document.getElementById(
+        'mode-btn-signup'
+      );
 
     const subtitle =
-      document.getElementById('auth-subtitle-text');
+      document.getElementById(
+        'auth-subtitle-text'
+      );
 
     if (
       !loginContainer ||
@@ -136,31 +221,57 @@ const App = {
       !loginBtn ||
       !signupBtn
     ) {
+
       return;
+
     }
 
     if (mode === 'signup') {
-      loginContainer.style.display = 'none';
-      signupContainer.style.display = 'block';
 
-      loginBtn.classList.remove('active');
-      signupBtn.classList.add('active');
+      loginContainer.style.display =
+        'none';
+
+      signupContainer.style.display =
+        'block';
+
+      loginBtn.classList.remove(
+        'active'
+      );
+
+      signupBtn.classList.add(
+        'active'
+      );
 
       if (subtitle) {
+
         subtitle.textContent =
           'Register a new employee or HR account';
-      }
-    } else {
-      loginContainer.style.display = 'block';
-      signupContainer.style.display = 'none';
 
-      loginBtn.classList.add('active');
-      signupBtn.classList.remove('active');
+      }
+
+    } else {
+
+      loginContainer.style.display =
+        'block';
+
+      signupContainer.style.display =
+        'none';
+
+      loginBtn.classList.add(
+        'active'
+      );
+
+      signupBtn.classList.remove(
+        'active'
+      );
 
       if (subtitle) {
+
         subtitle.textContent =
           'Sign in to access your employee or HR portal';
+
       }
+
     }
   },
 
@@ -169,52 +280,50 @@ const App = {
      ============================================================ */
 
   setRole(role) {
-    this.selectedRole = role;
+
+    this.selectedRole =
+      role;
 
     document
       .querySelectorAll('.role-tab')
       .forEach(tab => {
-        tab.classList.remove('active');
+
+        tab.classList.remove(
+          'active'
+        );
+
       });
 
     if (role === 'Employee') {
+
       const employeeTab =
-        document.getElementById('role-tab-emp');
+        document.getElementById(
+          'role-tab-emp'
+        );
 
       if (employeeTab) {
-        employeeTab.classList.add('active');
+
+        employeeTab.classList.add(
+          'active'
+        );
+
       }
+
     } else {
+
       const hrTab =
-        document.getElementById('role-tab-hr');
+        document.getElementById(
+          'role-tab-hr'
+        );
 
       if (hrTab) {
-        hrTab.classList.add('active');
+
+        hrTab.classList.add(
+          'active'
+        );
+
       }
-    }
-  },
 
-  /* ============================================================
-     DEMO CREDENTIALS
-     ============================================================ */
-
-  setDemoCreds(userId, password, role) {
-    this.switchAuthMode('login');
-
-    this.setRole(role);
-
-    const username =
-      document.getElementById('login-username');
-
-    const passwordField =
-      document.getElementById('login-password');
-
-    if (username) {
-      username.value = userId;
-    }
-
-    if (passwordField) {
-      passwordField.value = password;
     }
   },
 
@@ -226,43 +335,67 @@ const App = {
     fieldId = 'login-password',
     iconId = 'password-toggle-icon'
   ) {
+
     const field =
-      document.getElementById(fieldId);
+      document.getElementById(
+        fieldId
+      );
 
     const icon =
-      document.getElementById(iconId);
+      document.getElementById(
+        iconId
+      );
 
     if (!field || !icon) {
       return;
     }
 
     if (field.type === 'password') {
-      field.type = 'text';
-      icon.className = 'bi bi-eye-slash';
+
+      field.type =
+        'text';
+
+      icon.className =
+        'bi bi-eye-slash';
+
     } else {
-      field.type = 'password';
-      icon.className = 'bi bi-eye';
+
+      field.type =
+        'password';
+
+      icon.className =
+        'bi bi-eye';
+
     }
   },
 
   /* ============================================================
-     LOGIN — FRONTEND DEMO MODE
+     LOGIN — REAL BACKEND API
      ============================================================ */
 
   async handleLogin(event) {
+
     event.preventDefault();
 
     const usernameElement =
-      document.getElementById('login-username');
+      document.getElementById(
+        'login-username'
+      );
 
     const passwordElement =
-      document.getElementById('login-password');
+      document.getElementById(
+        'login-password'
+      );
 
     const errorAlert =
-      document.getElementById('login-error');
+      document.getElementById(
+        'login-error'
+      );
 
     const button =
-      document.getElementById('login-submit-btn');
+      document.getElementById(
+        'login-submit-btn'
+      );
 
     const username =
       usernameElement
@@ -275,215 +408,242 @@ const App = {
         : '';
 
     /* ----------------------------------------------------------
-       Validate
+       VALIDATION
        ---------------------------------------------------------- */
 
     if (!username || !password) {
+
       if (errorAlert) {
+
         errorAlert.textContent =
           'Please enter both ID/email and password.';
 
-        errorAlert.classList.add('show');
+        errorAlert.classList.add(
+          'show'
+        );
+
       }
 
       return;
     }
 
     if (errorAlert) {
-      errorAlert.classList.remove('show');
+
+      errorAlert.classList.remove(
+        'show'
+      );
+
     }
 
     if (button) {
-      button.classList.add('loading');
+
+      button.classList.add(
+        'loading'
+      );
+
+      button.disabled =
+        true;
+
     }
 
-    /* ----------------------------------------------------------
-       FRONTEND DEMO USERS
+    try {
 
-       No FastAPI.
-       No PostgreSQL.
-       No bcrypt.
-       No backend request.
-       ---------------------------------------------------------- */
+      /* --------------------------------------------------------
+         CALL REAL BACKEND
+         -------------------------------------------------------- */
 
-    const demoUsers = {
+      const response =
+        await API.login(
+          username,
+          password
+        );
 
-      /* Employee */
+      console.log(
+        'Login response:',
+        response
+      );
 
-      employee: {
-        id: 'OIRASH20230003',
-        password: 'emp123',
-        role: 'Employee',
-        name: 'Rashmi',
-        email: 'rashmi@dayflow.com',
-        designation: 'Software Engineer',
-        department: 'Engineering'
-      },
+      /* --------------------------------------------------------
+         GET USER FROM BACKEND RESPONSE
+         -------------------------------------------------------- */
 
-      /* HR */
+      const user =
+        response.user ||
+        response.employee ||
+        response;
 
-      hr: {
-        id: 'OIANKR20220001',
-        password: 'hr123',
-        role: 'HR',
-        name: 'Ankur',
-        email: 'ankur@dayflow.com',
-        designation: 'HR Manager',
-        department: 'Human Resources'
-      },
+      if (!user) {
 
-      /* Existing employee from your database */
+        throw new Error(
+          'Invalid login response from server.'
+        );
 
-      john: {
-        id: 'OIJOSM20260001',
-        password: 'test123',
-        role: 'Employee',
-        name: 'John Smith',
-        email: 'john.smith@test.com',
-        designation: 'Software Engineer',
-        department: 'Engineering'
       }
 
-    };
+      /* --------------------------------------------------------
+         GET ROLE
+         -------------------------------------------------------- */
 
-    let loggedInUser = null;
+      const backendRole =
+        (
+          user.role ||
+          response.role ||
+          'employee'
+        ).toLowerCase();
 
-    /* ----------------------------------------------------------
-       Employee login
-       ---------------------------------------------------------- */
+      const frontendRole =
+        backendRole === 'admin' ||
+        backendRole === 'hr'
+          ? 'HR'
+          : 'Employee';
 
-    if (
-      username === demoUsers.employee.id &&
-      password === demoUsers.employee.password
-    ) {
-      loggedInUser = demoUsers.employee;
-    }
+      /* --------------------------------------------------------
+         ROLE VERIFICATION
+         -------------------------------------------------------- */
 
-    /* ----------------------------------------------------------
-       HR login
-       ---------------------------------------------------------- */
+      if (
+        this.selectedRole &&
+        this.selectedRole !== frontendRole
+      ) {
 
-    if (
-      username === demoUsers.hr.id &&
-      password === demoUsers.hr.password
-    ) {
-      loggedInUser = demoUsers.hr;
-    }
+        throw new Error(
+          `Access denied. This account belongs to the ${frontendRole} role.`
+        );
 
-    /* ----------------------------------------------------------
-       John login
-       ---------------------------------------------------------- */
+      }
 
-    if (
-      username === demoUsers.john.id &&
-      password === demoUsers.john.password
-    ) {
-      loggedInUser = demoUsers.john;
-    }
+      /* --------------------------------------------------------
+         USER NAME
+         -------------------------------------------------------- */
 
-    /* ----------------------------------------------------------
-       Invalid login
-       ---------------------------------------------------------- */
+      const firstName =
+        user.first_name ||
+        '';
 
-    if (!loggedInUser) {
+      const lastName =
+        user.last_name ||
+        '';
+
+      const fullName =
+        `${firstName} ${lastName}`.trim() ||
+        user.name ||
+        'User';
+
+      /* --------------------------------------------------------
+         CREATE FRONTEND SESSION
+         -------------------------------------------------------- */
+
+      this.currentUser = {
+
+        id:
+          user.employee_id ||
+          user.id,
+
+        role:
+          frontendRole,
+
+        backendRole:
+          backendRole,
+
+        must_change_password:
+          user.must_change_password ||
+          false,
+
+        name:
+          fullName,
+
+        email:
+          user.email ||
+          '',
+
+        phone:
+          user.phone ||
+          '',
+
+        address:
+          user.address ||
+          '',
+
+        designation:
+          user.designation ||
+          '',
+
+        department:
+          user.department ||
+          '',
+
+        avatar:
+          fullName
+            .substring(0, 2)
+            .toUpperCase()
+
+      };
+
+      /* --------------------------------------------------------
+         SAVE SESSION
+         -------------------------------------------------------- */
+
+      this.selectedRole =
+        frontendRole;
+
+      this.saveSession();
+
+      console.log(
+        'Current user:',
+        this.currentUser
+      );
+
+      /* --------------------------------------------------------
+         SUCCESS MESSAGE
+         -------------------------------------------------------- */
+
+      this.showToast(
+        'Login successful!',
+        'success'
+      );
+
+      /* --------------------------------------------------------
+         OPEN DASHBOARD
+         -------------------------------------------------------- */
+
+      setTimeout(() => {
+
+        this.showAppShell();
+
+      }, 300);
+
+    } catch (error) {
+
+      console.error(
+        'Login error:',
+        error
+      );
 
       if (errorAlert) {
-        errorAlert.textContent =
-          'Invalid demo login. Use Employee: OIRASH20230003 / emp123 or HR: OIANKR20220001 / hr123';
 
-        errorAlert.classList.add('show');
+        errorAlert.textContent =
+          error.message ||
+          'Login failed. Please check your credentials.';
+
+        errorAlert.classList.add(
+          'show'
+        );
+
       }
+
+    } finally {
 
       if (button) {
-        button.classList.remove('loading');
+
+        button.classList.remove(
+          'loading'
+        );
+
+        button.disabled =
+          false;
+
       }
 
-      return;
-    }
-
-    /* ----------------------------------------------------------
-       Role verification
-       ---------------------------------------------------------- */
-
-    if (
-      this.selectedRole &&
-      this.selectedRole !== loggedInUser.role
-    ) {
-
-      if (errorAlert) {
-        errorAlert.textContent =
-          `Access denied. This account belongs to the ${loggedInUser.role} role.`;
-
-        errorAlert.classList.add('show');
-      }
-
-      if (button) {
-        button.classList.remove('loading');
-      }
-
-      return;
-    }
-
-    /* ----------------------------------------------------------
-       Create local frontend session
-       ---------------------------------------------------------- */
-
-    this.currentUser = {
-
-      id: loggedInUser.id,
-
-      role: loggedInUser.role,
-
-      backendRole:
-        loggedInUser.role === 'HR'
-          ? 'admin'
-          : 'employee',
-
-      must_change_password: false,
-
-      name: loggedInUser.name,
-
-      email: loggedInUser.email,
-
-      designation: loggedInUser.designation,
-
-      department: loggedInUser.department,
-
-      avatar:
-        loggedInUser.name
-          .substring(0, 2)
-          .toUpperCase()
-
-    };
-
-    /* ----------------------------------------------------------
-       Save session
-       ---------------------------------------------------------- */
-
-    this.selectedRole =
-      loggedInUser.role;
-
-    this.saveSession();
-
-    /* ----------------------------------------------------------
-       Success message
-       ---------------------------------------------------------- */
-
-    this.showToast(
-      'Login successful!',
-      'success'
-    );
-
-    /* ----------------------------------------------------------
-       Open dashboard
-       ---------------------------------------------------------- */
-
-    setTimeout(() => {
-      this.showAppShell();
-    }, 300);
-
-    if (button) {
-      button.classList.remove('loading');
     }
   },
 
@@ -492,16 +652,18 @@ const App = {
      ============================================================ */
 
   async handleSignUp(event) {
+
     event.preventDefault();
 
     this.showToast(
-      'Demo mode: Registration is currently disabled.',
+      'Registration is currently unavailable.',
       'warning'
     );
 
     console.log(
-      'Registration is disabled in frontend demo mode.'
+      'Registration API integration will be added separately.'
     );
+
   },
 
   /* ============================================================
@@ -509,6 +671,7 @@ const App = {
      ============================================================ */
 
   logout() {
+
     this.clearSession();
 
     this.showToast(
@@ -517,8 +680,11 @@ const App = {
     );
 
     setTimeout(() => {
+
       this.showAuthScreen();
+
     }, 300);
+
   },
 
   /* ============================================================
@@ -528,39 +694,55 @@ const App = {
   showAppShell() {
 
     const authScreen =
-      document.getElementById('auth-screen');
+      document.getElementById(
+        'auth-screen'
+      );
 
     const shell =
-      document.getElementById('app-shell');
+      document.getElementById(
+        'app-shell'
+      );
 
     if (authScreen) {
-      authScreen.style.display = 'none';
+
+      authScreen.style.display =
+        'none';
+
     }
 
     if (!shell) {
       return;
     }
 
-    shell.classList.add('active');
+    shell.classList.add(
+      'active'
+    );
 
     this.renderSidebar();
 
     this.renderHeader();
 
-    /* Open dashboard according to role */
+    /* ----------------------------------------------------------
+       OPEN DASHBOARD BASED ON ROLE
+       ---------------------------------------------------------- */
 
     if (
       this.currentUser &&
       this.currentUser.role === 'Employee'
     ) {
 
-      this.navigate('emp-dashboard');
+      this.navigate(
+        'emp-dashboard'
+      );
 
     } else {
 
-      this.navigate('hr-dashboard');
+      this.navigate(
+        'hr-dashboard'
+      );
 
     }
+
   },
 
   /* ============================================================
@@ -574,112 +756,195 @@ const App = {
     }
 
     const isEmployee =
-      this.currentUser.role === 'Employee';
+      this.currentUser.role ===
+      'Employee';
 
-    const links = isEmployee
-      ? [
+    const links =
+      isEmployee
 
-          {
-            view: 'emp-dashboard',
-            icon: 'speedometer2',
-            label: 'Dashboard'
-          },
+        ? [
 
-          {
-            view: 'emp-profile',
-            icon: 'person-badge',
-            label: 'Profile'
-          },
+            {
+              view:
+                'emp-dashboard',
 
-          {
-            view: 'emp-work-history',
-            icon: 'clock-history',
-            label: 'Work History'
-          },
+              icon:
+                'speedometer2',
 
-          {
-            view: 'emp-attendance',
-            icon: 'calendar-check',
-            label: 'Attendance'
-          },
+              label:
+                'Dashboard'
+            },
 
-          {
-            view: 'emp-leave',
-            icon: 'calendar2-minus',
-            label: 'Leave'
-          },
+            {
+              view:
+                'emp-profile',
 
-          {
-            view: 'emp-mail',
-            icon: 'envelope',
-            label: 'Work Mail'
-          },
+              icon:
+                'person-badge',
 
-          {
-            view: 'emp-assignments',
-            icon: 'card-checklist',
-            label: 'Assignments'
-          }
+              label:
+                'Profile'
+            },
 
-        ]
+            {
+              view:
+                'emp-work-history',
 
-      : [
+              icon:
+                'clock-history',
 
-          {
-            view: 'hr-dashboard',
-            icon: 'speedometer2',
-            label: 'Dashboard'
-          },
+              label:
+                'Work History'
+            },
 
-          {
-            view: 'hr-profile',
-            icon: 'person-badge',
-            label: 'Profile'
-          },
+            {
+              view:
+                'emp-attendance',
 
-          {
-            view: 'hr-employees',
-            icon: 'people',
-            label: 'Employees'
-          },
+              icon:
+                'calendar-check',
 
-          {
-            view: 'hr-assignments',
-            icon: 'card-checklist',
-            label: 'Assignments'
-          },
+              label:
+                'Attendance'
+            },
 
-          {
-            view: 'hr-work-mail',
-            icon: 'envelope',
-            label: 'Work Mail'
-          },
+            {
+              view:
+                'emp-leave',
 
-          {
-            view: 'hr-leave',
-            icon: 'calendar2-minus',
-            label: 'Leave Requests'
-          },
+              icon:
+                'calendar2-minus',
 
-          {
-            view: 'hr-permission-mail',
-            icon: 'file-earmark-text',
-            label: 'Permission Mail'
-          },
+              label:
+                'Leave'
+            },
 
-          {
-            view: 'hr-reports',
-            icon: 'bar-chart-line',
-            label: 'Reports'
-          },
+            {
+              view:
+                'emp-mail',
 
-          {
-            view: 'hr-settings',
-            icon: 'gear',
-            label: 'Settings'
-          }
+              icon:
+                'envelope',
 
-        ];
+              label:
+                'Work Mail'
+            },
+
+            {
+              view:
+                'emp-assignments',
+
+              icon:
+                'card-checklist',
+
+              label:
+                'Assignments'
+            }
+
+          ]
+
+        : [
+
+            {
+              view:
+                'hr-dashboard',
+
+              icon:
+                'speedometer2',
+
+              label:
+                'Dashboard'
+            },
+
+            {
+              view:
+                'hr-profile',
+
+              icon:
+                'person-badge',
+
+              label:
+                'Profile'
+            },
+
+            {
+              view:
+                'hr-employees',
+
+              icon:
+                'people',
+
+              label:
+                'Employees'
+            },
+
+            {
+              view:
+                'hr-assignments',
+
+              icon:
+                'card-checklist',
+
+              label:
+                'Assignments'
+            },
+
+            {
+              view:
+                'hr-work-mail',
+
+              icon:
+                'envelope',
+
+              label:
+                'Work Mail'
+            },
+
+            {
+              view:
+                'hr-leave',
+
+              icon:
+                'calendar2-minus',
+
+              label:
+                'Leave Requests'
+            },
+
+            {
+              view:
+                'hr-permission-mail',
+
+              icon:
+                'file-earmark-text',
+
+              label:
+                'Permission Mail'
+            },
+
+            {
+              view:
+                'hr-reports',
+
+              icon:
+                'bar-chart-line',
+
+              label:
+                'Reports'
+            },
+
+            {
+              view:
+                'hr-settings',
+
+              icon:
+                'gear',
+
+              label:
+                'Settings'
+            }
+
+          ];
 
     const linksHTML =
       links
@@ -687,7 +952,8 @@ const App = {
 
           <button
             class="sidebar-link ${
-              this.currentView === link.view
+              this.currentView ===
+              link.view
                 ? 'active'
                 : ''
             }"
@@ -727,10 +993,11 @@ const App = {
         ${linksHTML}
 
       `;
+
     }
 
     /* ----------------------------------------------------------
-       Sidebar user
+       SIDEBAR USER
        ---------------------------------------------------------- */
 
     const avatar =
@@ -771,6 +1038,7 @@ const App = {
         `${this.currentUser.role} • ${this.currentUser.id}`;
 
     }
+
   },
 
   /* ============================================================
@@ -822,6 +1090,7 @@ const App = {
         this.currentUser.role;
 
     }
+
   },
 
   /* ============================================================
@@ -841,12 +1110,21 @@ const App = {
       );
 
     if (sidebar) {
-      sidebar.classList.toggle('open');
+
+      sidebar.classList.toggle(
+        'open'
+      );
+
     }
 
     if (overlay) {
-      overlay.classList.toggle('show');
+
+      overlay.classList.toggle(
+        'show'
+      );
+
     }
+
   },
 
   closeMobileSidebar() {
@@ -862,34 +1140,50 @@ const App = {
       );
 
     if (sidebar) {
-      sidebar.classList.remove('open');
+
+      sidebar.classList.remove(
+        'open'
+      );
+
     }
 
     if (overlay) {
-      overlay.classList.remove('show');
+
+      overlay.classList.remove(
+        'show'
+      );
+
     }
+
   },
 
   /* ============================================================
      NAVIGATION
      ============================================================ */
 
-  navigate(viewId) {
+  async navigate(viewId) {
 
     if (!this.currentUser) {
       return;
     }
 
     const isEmployeeView =
-      viewId.startsWith('emp-');
+      viewId.startsWith(
+        'emp-'
+      );
 
     const isHRView =
-      viewId.startsWith('hr-');
+      viewId.startsWith(
+        'hr-'
+      );
 
-    /* Employee cannot access HR */
+    /* ----------------------------------------------------------
+       EMPLOYEE → HR PROTECTION
+       ---------------------------------------------------------- */
 
     if (
-      this.currentUser.role === 'Employee' &&
+      this.currentUser.role ===
+        'Employee' &&
       isHRView
     ) {
 
@@ -899,12 +1193,16 @@ const App = {
       );
 
       return;
+
     }
 
-    /* HR cannot access Employee */
+    /* ----------------------------------------------------------
+       HR → EMPLOYEE PROTECTION
+       ---------------------------------------------------------- */
 
     if (
-      this.currentUser.role === 'HR' &&
+      this.currentUser.role ===
+        'HR' &&
       isEmployeeView
     ) {
 
@@ -914,6 +1212,7 @@ const App = {
       );
 
       return;
+
     }
 
     this.currentView =
@@ -932,10 +1231,13 @@ const App = {
       return;
     }
 
-    window.scrollTo(0, 0);
+    window.scrollTo(
+      0,
+      0
+    );
 
     /* ----------------------------------------------------------
-       Breadcrumb
+       BREADCRUMB
        ---------------------------------------------------------- */
 
     const breadcrumb =
@@ -1010,7 +1312,7 @@ const App = {
     }
 
     /* ----------------------------------------------------------
-       Render selected view
+       RENDER SELECTED VIEW
        ---------------------------------------------------------- */
 
     let html = '';
@@ -1068,7 +1370,7 @@ const App = {
       case 'emp-leave':
 
         html =
-          EmployeeViews.renderLeave(
+          await EmployeeViews.renderLeave(
             employee
           );
 
@@ -1170,27 +1472,35 @@ const App = {
 
         html =
           Components.EmptyState({
-            title: 'Page not found'
+            title:
+              'Page not found'
           });
 
     }
 
-    viewport.innerHTML =
-      html;
+      viewport.innerHTML =
+          await html;
 
     /* ----------------------------------------------------------
-       Charts
+       EXISTING CHARTS
+       
+       NOTE:
+       These still use MockData for now.
+       We will replace them with real API data next.
        ---------------------------------------------------------- */
 
     setTimeout(() => {
 
       if (
-        viewId === 'emp-attendance' &&
-        typeof Charts !== 'undefined'
+        viewId ===
+          'emp-attendance' &&
+        typeof Charts !==
+          'undefined'
       ) {
 
         if (
-          typeof MockData !== 'undefined' &&
+          typeof MockData !==
+            'undefined' &&
           MockData.getAttendance
         ) {
 
@@ -1208,11 +1518,16 @@ const App = {
             'chart-yearly-attendance',
             data
           );
+
         }
 
-      } else if (
-        viewId === 'hr-dashboard' &&
-        typeof Charts !== 'undefined'
+      }
+
+      else if (
+        viewId ===
+          'hr-dashboard' &&
+        typeof Charts !==
+          'undefined'
       ) {
 
         Charts.renderHRAttendanceOverview(
@@ -1220,7 +1535,8 @@ const App = {
         );
 
         if (
-          typeof MockData !== 'undefined' &&
+          typeof MockData !==
+            'undefined' &&
           MockData.getEmployees
         ) {
 
@@ -1230,9 +1546,11 @@ const App = {
           );
 
         }
+
       }
 
     }, 100);
+
   },
 
   /* ============================================================
@@ -1247,10 +1565,13 @@ const App = {
     wide = false
   ) {
 
-    this.closeModal(id);
+    this.closeModal(
+      id
+    );
 
     if (
-      typeof Components === 'undefined' ||
+      typeof Components ===
+        'undefined' ||
       !Components.Modal
     ) {
 
@@ -1259,15 +1580,18 @@ const App = {
       );
 
       return;
+
     }
 
     const modalHTML =
       Components.Modal({
+
         id,
         title,
         body,
         footer,
         wide
+
       });
 
     const container =
@@ -1287,13 +1611,20 @@ const App = {
     setTimeout(() => {
 
       const modal =
-        document.getElementById(id);
+        document.getElementById(
+          id
+        );
 
       if (modal) {
-        modal.classList.add('active');
+
+        modal.classList.add(
+          'active'
+        );
+
       }
 
     }, 10);
+
   },
 
   /* ============================================================
@@ -1303,7 +1634,9 @@ const App = {
   closeModal(id) {
 
     const modal =
-      document.getElementById(id);
+      document.getElementById(
+        id
+      );
 
     if (!modal) {
       return;
@@ -1320,6 +1653,7 @@ const App = {
       }
 
     }, 300);
+
   },
 
   /* ============================================================
@@ -1403,10 +1737,17 @@ const App = {
       }, 300);
 
     }, 3500);
+
   },
 
   /* ============================================================
-     MOCK DATA COMPATIBILITY
+     LEGACY MOCK DATA COMPATIBILITY
+     
+     This function is kept temporarily because some existing
+     profile-edit code may still call it.
+     
+     We will remove this after all pages are connected
+     directly to the backend API.
      ============================================================ */
 
   updateUserInMockData(
@@ -1414,16 +1755,20 @@ const App = {
   ) {
 
     if (
-      typeof MockData === 'undefined' ||
+      typeof MockData ===
+        'undefined' ||
       !MockData.users
     ) {
+
       return;
+
     }
 
     const index =
       MockData.users.findIndex(
         user =>
-          user.id === updatedUser.id
+          user.id ===
+          updatedUser.id
       );
 
     if (index !== -1) {
@@ -1437,6 +1782,7 @@ const App = {
       };
 
     }
+
   }
 
 };
@@ -1448,9 +1794,36 @@ const App = {
 
 document.addEventListener(
   'DOMContentLoaded',
-  () => {
+  async () => {
+
+    console.log(
+      'Dayflow HRMS starting...'
+    );
+
+    try {
+
+      if (
+        typeof MockData !== 'undefined' &&
+        typeof MockData.initialize === 'function'
+      ) {
+
+        await MockData.initialize();
+
+        console.log(
+          'Real backend data loaded successfully.'
+        );
+
+      }
+
+    } catch (error) {
+
+      console.error(
+        'Failed to load backend data:',
+        error
+      );
+
+    }
 
     App.init();
-
   }
 );

@@ -107,11 +107,19 @@ def login(
         )
 
     return LoginResponse(
-        message="Login successful",
-        employee_id=employee.employee_id,
-        role=employee.role,
-        must_change_password=employee.must_change_password
-    )
+    message="Login successful",
+    employee_id=employee.employee_id,
+    role=employee.role,
+    must_change_password=employee.must_change_password,
+
+    first_name=employee.first_name,
+    last_name=employee.last_name,
+    email=employee.email,
+    phone=employee.phone,
+    address=employee.address,
+    designation=employee.designation,
+    department=employee.department
+)
 
 
 @router.put(

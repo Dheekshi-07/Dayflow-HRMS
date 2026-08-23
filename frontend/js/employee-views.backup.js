@@ -9,34 +9,28 @@ const EmployeeViews = {
      ============================================================ */
 
   renderDashboard(emp) {
-
     return `
       <div class="welcome-section">
-
-        <h1>
-          Welcome, ${emp.name}! 👋
-        </h1>
-
+        <h1>Welcome, ${emp.name}! 👋</h1>
         <p>
-          ${emp.designation || '-'} •
-          ${emp.department || '-'} Department •
-          ID: ${emp.id || emp.employee_id || '-'}
+          ${emp.designation} •
+          ${emp.department} Department •
+          ID: ${emp.id}
         </p>
-
       </div>
 
+      <!--
+        IMPORTANT:
+        Attendance percentage and leave balance are NOT shown here
+        because those values were previously coming from MockData.
+        They will only be displayed from real backend data.
+      -->
+
       <div class="card">
-
         <div class="card-body">
-
           <div class="empty-state">
-
             <i class="bi bi-speedometer2"></i>
-
-            <h3>
-              Employee Dashboard
-            </h3>
-
+            <h3>Employee Dashboard</h3>
             <p>
               Your attendance and leave information is available
               through the Attendance and Leave Management sections.
@@ -49,7 +43,6 @@ const EmployeeViews = {
               margin-top:1rem;
               flex-wrap:wrap;
             ">
-
               <button
                 class="btn btn-primary"
                 onclick="App.navigate('emp-attendance')"
@@ -65,13 +58,9 @@ const EmployeeViews = {
                 <i class="bi bi-calendar2-minus"></i>
                 View Leave
               </button>
-
             </div>
-
           </div>
-
         </div>
-
       </div>
     `;
   },
@@ -82,26 +71,18 @@ const EmployeeViews = {
      ============================================================ */
 
   renderProfile(emp) {
-
     return `
       ${Components.BackButton('emp-dashboard')}
 
       <div class="page-header">
-
         <div>
-
-          <h1 class="page-title">
-            My Profile
-          </h1>
-
+          <h1 class="page-title">My Profile</h1>
           <p class="page-subtitle">
             Personal and professional employee details
           </p>
-
         </div>
 
         <div class="page-actions">
-
           <button
             class="btn btn-primary"
             onclick="App.navigate('emp-edit-profile')"
@@ -109,49 +90,33 @@ const EmployeeViews = {
             <i class="bi bi-pencil-square"></i>
             Edit Profile
           </button>
-
         </div>
-
       </div>
 
-
       <div class="card">
-
         <div class="card-body">
 
           <div class="profile-header">
-
             <div class="profile-avatar">
               ${
                 emp.avatar ||
-                (emp.name || 'E')
-                  .substring(0, 2)
-                  .toUpperCase()
+                emp.name.substring(0, 2).toUpperCase()
               }
             </div>
 
             <div class="profile-info">
-
-              <h2>
-                ${emp.name || '-'}
-              </h2>
+              <h2>${emp.name}</h2>
 
               <div class="profile-role">
-                ${emp.designation || '-'} •
-                ${emp.department || '-'}
+                ${emp.designation} • ${emp.department}
               </div>
 
               <div class="profile-id">
                 Employee ID:
-                <strong>
-                  ${emp.id || emp.employee_id || '-'}
-                </strong>
+                <strong>${emp.id}</strong>
               </div>
-
             </div>
-
           </div>
-
 
           <div style="
             height:1px;
@@ -159,106 +124,75 @@ const EmployeeViews = {
             margin:1.5rem 0;
           "></div>
 
-
           <div class="profile-details-grid">
 
             <div class="profile-detail-item">
-
               <span class="profile-detail-label">
                 Full Name
               </span>
-
               <span class="profile-detail-value">
-                ${emp.name || '-'}
+                ${emp.name}
               </span>
-
             </div>
 
-
             <div class="profile-detail-item">
-
               <span class="profile-detail-label">
                 Employee ID
               </span>
-
               <span class="profile-detail-value">
-                ${emp.id || emp.employee_id || '-'}
+                ${emp.id}
               </span>
-
             </div>
 
-
             <div class="profile-detail-item">
-
               <span class="profile-detail-label">
                 Personal Email
               </span>
-
               <span class="profile-detail-value">
                 ${emp.email || '-'}
               </span>
-
             </div>
 
-
             <div class="profile-detail-item">
-
               <span class="profile-detail-label">
                 Work Email
               </span>
-
               <span class="profile-detail-value">
                 ${emp.workEmail || '-'}
               </span>
-
             </div>
 
-
             <div class="profile-detail-item">
-
               <span class="profile-detail-label">
                 Phone Number
               </span>
-
               <span class="profile-detail-value">
                 ${emp.phone || '-'}
               </span>
-
             </div>
 
-
             <div class="profile-detail-item">
-
               <span class="profile-detail-label">
                 Department
               </span>
-
               <span class="profile-detail-value">
                 ${emp.department || '-'}
               </span>
-
             </div>
 
-
             <div class="profile-detail-item">
-
               <span class="profile-detail-label">
                 Designation
               </span>
-
               <span class="profile-detail-value">
                 ${emp.designation || '-'}
               </span>
-
             </div>
 
-
             <div class="profile-detail-item">
-
               <span class="profile-detail-label">
                 Date of Joining
               </span>
-
               <span class="profile-detail-value">
                 ${
                   emp.joiningDate
@@ -266,15 +200,12 @@ const EmployeeViews = {
                     : '-'
                 }
               </span>
-
             </div>
-
 
             <div
               class="profile-detail-item"
               style="grid-column:1 / -1;"
             >
-
               <span class="profile-detail-label">
                 Residential Address
               </span>
@@ -282,13 +213,10 @@ const EmployeeViews = {
               <span class="profile-detail-value">
                 ${emp.address || '-'}
               </span>
-
             </div>
 
           </div>
-
         </div>
-
       </div>
     `;
   },
@@ -299,26 +227,17 @@ const EmployeeViews = {
      ============================================================ */
 
   renderEditProfile(emp) {
-
     return `
       ${Components.BackButton('emp-profile')}
 
       <div class="page-header">
-
         <div>
-
-          <h1 class="page-title">
-            Edit Profile
-          </h1>
-
+          <h1 class="page-title">Edit Profile</h1>
           <p class="page-subtitle">
             Update your personal contact information
           </p>
-
         </div>
-
       </div>
-
 
       <div class="card">
 
@@ -329,7 +248,6 @@ const EmployeeViews = {
             border-color:var(--warning-bg);
           "
         >
-
           <span
             style="
               font-size:0.8125rem;
@@ -337,16 +255,11 @@ const EmployeeViews = {
               color:var(--warning);
             "
           >
-
             <i class="bi bi-info-circle"></i>
-
             Company-assigned fields such as Employee ID,
             Designation and Department cannot be modified.
-
           </span>
-
         </div>
-
 
         <div class="card-body">
 
@@ -364,7 +277,6 @@ const EmployeeViews = {
                 icon:'person'
               })}
 
-
               ${Components.FormInput({
                 id:'edit-email',
                 label:'Personal Email',
@@ -374,7 +286,6 @@ const EmployeeViews = {
                 icon:'envelope'
               })}
 
-
               ${Components.FormInput({
                 id:'edit-phone',
                 label:'Phone Number',
@@ -382,7 +293,6 @@ const EmployeeViews = {
                 required:true,
                 icon:'telephone'
               })}
-
 
               ${Components.FormInput({
                 id:'edit-work-email',
@@ -395,7 +305,6 @@ const EmployeeViews = {
 
             </div>
 
-
             ${Components.FormTextarea({
               id:'edit-address',
               label:'Residential Address',
@@ -403,7 +312,6 @@ const EmployeeViews = {
               required:true,
               rows:3
             })}
-
 
             <div style="
               display:flex;
@@ -420,31 +328,24 @@ const EmployeeViews = {
                 Cancel
               </button>
 
-
               <button
                 type="submit"
                 class="btn btn-primary"
               >
-
                 <i class="bi bi-check-lg"></i>
-
                 Save Changes
-
               </button>
 
             </div>
 
           </form>
-
         </div>
-
       </div>
     `;
   },
 
 
   handleProfileSave(e) {
-
     e.preventDefault();
 
     const name =
@@ -462,7 +363,6 @@ const EmployeeViews = {
     const address =
       document.getElementById('edit-address').value;
 
-
     if (
       !name ||
       !email ||
@@ -470,15 +370,12 @@ const EmployeeViews = {
       !workEmail ||
       !address
     ) {
-
       App.showToast(
         'Please fill out all required fields.',
         'error'
       );
-
       return;
     }
-
 
     App.currentUser.name = name;
     App.currentUser.email = email;
@@ -486,26 +383,20 @@ const EmployeeViews = {
     App.currentUser.workEmail = workEmail;
     App.currentUser.address = address;
 
-
-    if (
-      typeof App.updateUserInMockData === 'function'
-    ) {
-
-      App.updateUserInMockData(
-        App.currentUser
-      );
-
+    /*
+      Keep existing application behaviour for profile
+      until profile API integration is completed.
+    */
+    if (typeof App.updateUserInMockData === 'function') {
+      App.updateUserInMockData(App.currentUser);
     }
 
-
     App.saveSession();
-
 
     App.showToast(
       'Profile updated successfully!',
       'success'
     );
-
 
     App.navigate('emp-profile');
   },
@@ -513,515 +404,438 @@ const EmployeeViews = {
 
   /* ============================================================
      WORK HISTORY
-     REAL BACKEND DOES NOT PROVIDE WORK HISTORY
      ============================================================ */
 
   renderWorkHistory(emp) {
+    const history =
+      MockData.getEmployeeWorkHistory(emp.id);
 
-    /*
-     * Backend currently does not provide a work-history /
-     * assignments endpoint.
-     *
-     * Therefore we DO NOT show fake data.
-     */
+    const columns = [
 
-    const history = [];
+      {
+        label:'Task / Project',
+        key:'title',
+        className:'td-name'
+      },
 
+      {
+        label:'Start Date',
+        key:'startDate',
+        render:r =>
+          Components.formatDate(r.startDate)
+      },
+
+      {
+        label:'Completion Date',
+        key:'endDate',
+        render:r =>
+          r.endDate
+            ? Components.formatDate(r.endDate)
+            : 'Ongoing'
+      },
+
+      {
+        label:'Time Taken',
+        key:'timeTaken'
+      },
+
+      {
+        label:'Status',
+        key:'status',
+        render:r =>
+          Components.StatusBadge(r.status)
+      },
+
+      {
+        label:'Action',
+        key:'id',
+        render:r => `
+          <button
+            class="btn btn-ghost btn-sm"
+            onclick="EmployeeViews.showWorkDetail('${r.id}')"
+          >
+            <i class="bi bi-eye"></i>
+            Details
+          </button>
+        `
+      }
+
+    ];
 
     return `
-
       ${Components.BackButton('emp-dashboard')}
 
-
       <div class="page-header">
-
         <div>
-
-          <h1 class="page-title">
-            Work History
-          </h1>
-
+          <h1 class="page-title">Work History</h1>
           <p class="page-subtitle">
             Track record of your completed and ongoing projects
           </p>
-
         </div>
-
       </div>
 
-
-      <div class="card">
-
-        <div class="card-header">
-
-          <h3 class="card-title">
-            Work History
-          </h3>
-
-        </div>
-
-
-        <div class="card-body">
-
-          ${
-            history.length === 0
-
-              ? `
-                <div class="empty-state">
-
-                  <i class="bi bi-briefcase"></i>
-
-                  <h3>
-                    0 Work History Records
-                  </h3>
-
-                  <p>
-                    No work history records are available yet.
-                  </p>
-
-                </div>
-              `
-
-              : Components.DataTable({
-                  id:'work-history-table',
-                  columns:[],
-                  rows:history,
-                  searchPlaceholder:
-                    'Search work history...'
-                })
+      ${Components.DataTable({
+        id:'work-history-table',
+        columns,
+        rows:history,
+        searchPlaceholder:'Search work history...',
+        filters:[
+          {
+            key:'status',
+            label:'All Statuses',
+            options:[
+              'Completed',
+              'In Progress'
+            ]
           }
-
-        </div>
-
-      </div>
-
+        ]
+      })}
     `;
   },
 
 
   showWorkDetail(whId) {
+    const history =
+      MockData.getEmployeeWorkHistory(
+        App.currentUser.id
+      );
 
-    /*
-     * Work history is currently not available
-     * from the backend.
-     */
+    const item =
+      history.find(h => h.id === whId);
 
-    return;
+    if (!item) return;
+
+    App.showModal(
+      'work-detail-modal',
+      item.title,
+      `
+        <div class="detail-row">
+          <span class="detail-label">
+            Task Name
+          </span>
+          <span class="detail-value fw-600">
+            ${item.title}
+          </span>
+        </div>
+
+        <div class="detail-row">
+          <span class="detail-label">
+            Start Date
+          </span>
+          <span class="detail-value">
+            ${Components.formatDate(item.startDate)}
+          </span>
+        </div>
+
+        <div class="detail-row">
+          <span class="detail-label">
+            Completion Date
+          </span>
+          <span class="detail-value">
+            ${
+              item.endDate
+                ? Components.formatDate(item.endDate)
+                : 'Ongoing'
+            }
+          </span>
+        </div>
+
+        <div class="detail-row">
+          <span class="detail-label">
+            Time Taken
+          </span>
+          <span class="detail-value">
+            ${item.timeTaken}
+          </span>
+        </div>
+
+        <div class="detail-row">
+          <span class="detail-label">
+            Status
+          </span>
+          <span class="detail-value">
+            ${Components.StatusBadge(item.status)}
+          </span>
+        </div>
+
+        <div
+          class="detail-row"
+          style="
+            flex-direction:column;
+            gap:0.5rem;
+            margin-top:0.5rem;
+          "
+        >
+          <span class="detail-label">
+            Description
+          </span>
+
+          <span
+            class="detail-value"
+            style="line-height:1.5;"
+          >
+            ${item.description}
+          </span>
+        </div>
+      `,
+      `
+        <button
+          class="btn btn-secondary"
+          onclick="App.closeModal('work-detail-modal')"
+        >
+          Close
+        </button>
+      `
+    );
   },
 
 
-/* ============================================================
-   ATTENDANCE
-   SHOW ZERO WHEN NO DATA SHOULD BE DISPLAYED
-   ============================================================ */
-
-async renderAttendance(emp) {
-
-  const employeeId =
-    emp.employee_id || emp.id;
-
-  return `
-
-    ${Components.BackButton('emp-dashboard')}
-
-    <div class="page-header">
-
-      <div>
-        <h1 class="page-title">
-          Attendance
-        </h1>
-
-        <p class="page-subtitle">
-          Track your attendance records
-        </p>
-      </div>
-
-    </div>
-
-
-    <!-- ATTENDANCE SUMMARY -->
-
-    <div class="grid-4">
-
-      <div class="card">
-        <div class="card-body">
-
-          <div class="stat-card">
-
-            <div class="stat-card-content">
-
-              <span class="stat-card-label">
-                Attendance Rate
-              </span>
-
-              <span class="stat-card-value">
-                0%
-              </span>
-
-            </div>
-
-          </div>
-
-        </div>
-      </div>
-
-
-      <div class="card">
-        <div class="card-body">
-
-          <div class="stat-card">
-
-            <div class="stat-card-content">
-
-              <span class="stat-card-label">
-                Present
-              </span>
-
-              <span class="stat-card-value">
-                0
-              </span>
-
-            </div>
-
-          </div>
-
-        </div>
-      </div>
-
-
-      <div class="card">
-        <div class="card-body">
-
-          <div class="stat-card">
-
-            <div class="stat-card-content">
-
-              <span class="stat-card-label">
-                Absent
-              </span>
-
-              <span class="stat-card-value">
-                0
-              </span>
-
-            </div>
-
-          </div>
-
-        </div>
-      </div>
-
-
-      <div class="card">
-        <div class="card-body">
-
-          <div class="stat-card">
-
-            <div class="stat-card-content">
-
-              <span class="stat-card-label">
-                Total Records
-              </span>
-
-              <span class="stat-card-value">
-                0
-              </span>
-
-            </div>
-
-          </div>
-
-        </div>
-      </div>
-
-    </div>
-
-
-    <!-- CHECK IN / CHECK OUT -->
-
-    <div
-      style="
-        display:flex;
-        gap:0.75rem;
-        margin:1.5rem 0;
-        flex-wrap:wrap;
-      "
-    >
-
-      <button
-        class="btn btn-success"
-        onclick="
-          EmployeeViews.handleCheckIn('${employeeId}')
-        "
-      >
-        <i class="bi bi-box-arrow-in-right"></i>
-        Check In
-      </button>
-
-
-      <button
-        class="btn btn-danger"
-        onclick="
-          EmployeeViews.handleCheckOut('${employeeId}')
-        "
-      >
-        <i class="bi bi-box-arrow-right"></i>
-        Check Out
-      </button>
-
-    </div>
-
-
-    <!-- ATTENDANCE HISTORY -->
-
-    <div class="card">
-
-      <div class="card-header">
-
-        <h3 class="card-title">
-          Attendance History
-        </h3>
-
-      </div>
-
-
-      <div class="card-body">
-
-        <div class="empty-state">
-
-          <i class="bi bi-calendar-x"></i>
-
-          <h3>
-            0 Attendance Records
-          </h3>
-
-          <p>
-            No attendance records have been recorded yet.
-          </p>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  `;
-},
-
-
   /* ============================================================
-     ATTENDANCE ZERO STATE
+     ATTENDANCE
+     REAL BACKEND DATA ONLY
      ============================================================ */
 
-  renderAttendanceZeroState() {
+  async renderAttendance(emp) {
 
-    return `
+    try {
 
-      ${Components.BackButton('emp-dashboard')}
+      const attendanceRecords =
+        await API.getAttendance(emp.id);
 
+      console.log(
+        'REAL ATTENDANCE DATA:',
+        attendanceRecords
+      );
 
-      <div class="page-header">
+      const present =
+        attendanceRecords.filter(
+          record =>
+            String(record.status).toLowerCase() ===
+            'present'
+        ).length;
 
-        <div>
+      const late =
+        attendanceRecords.filter(
+          record =>
+            String(record.status).toLowerCase() ===
+            'late'
+        ).length;
 
-          <h1 class="page-title">
-            Attendance
-          </h1>
+      const absent =
+        attendanceRecords.filter(
+          record =>
+            String(record.status).toLowerCase() ===
+            'absent'
+        ).length;
 
-          <p class="page-subtitle">
-            Real attendance records from HRMS database
-          </p>
+      const total =
+        attendanceRecords.length;
 
-        </div>
+      const attendanceRate =
+        total > 0
+          ? Math.round((present / total) * 100)
+          : 0;
 
-      </div>
+      return `
 
+        ${Components.BackButton('emp-dashboard')}
 
-      <div class="grid-4">
+        <div class="page-header">
 
-        <div class="card">
+          <div>
+            <h1 class="page-title">
+              Attendance Overview
+            </h1>
 
-          <div class="card-body">
-
-            <p class="text-muted">
-              Attendance Rate
+            <p class="page-subtitle">
+              Track your attendance using records from the HRMS database
             </p>
-
-            <h2>
-              0%
-            </h2>
-
           </div>
 
         </div>
 
 
-        <div class="card">
+        <div class="stats-grid">
 
-          <div class="card-body">
+          ${Components.StatCard({
+            icon:'calendar-check',
+            value:`${attendanceRate}%`,
+            label:'Attendance Rate',
+            color:'primary'
+          })}
 
-            <p class="text-muted">
-              Present
-            </p>
+          ${Components.StatCard({
+            icon:'check-circle',
+            value:present,
+            label:'Present Days',
+            color:'success'
+          })}
 
-            <h2>
-              0
-            </h2>
+          ${Components.StatCard({
+            icon:'clock-history',
+            value:late,
+            label:'Late Days',
+            color:'warning'
+          })}
 
-          </div>
-
-        </div>
-
-
-        <div class="card">
-
-          <div class="card-body">
-
-            <p class="text-muted">
-              Absent
-            </p>
-
-            <h2>
-              0
-            </h2>
-
-          </div>
-
-        </div>
-
-
-        <div class="card">
-
-          <div class="card-body">
-
-            <p class="text-muted">
-              Total Records
-            </p>
-
-            <h2>
-              0
-            </h2>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="card-header">
-
-          <h3 class="card-title">
-            Attendance History
-          </h3>
+          ${Components.StatCard({
+            icon:'x-circle',
+            value:absent,
+            label:'Absent Days',
+            color:'danger'
+          })}
 
         </div>
 
 
-        <div class="card-body">
+        <div class="card mb-3">
 
-          <div class="empty-state">
-
-            <i class="bi bi-calendar-x"></i>
-
-            <h3>
-              0 Attendance Records
+          <div class="card-header">
+            <h3 class="card-title">
+              Attendance History
             </h3>
+          </div>
 
-            <p>
-              No attendance records have been recorded yet.
-            </p>
+          <div class="card-body">
+
+            ${
+              attendanceRecords.length === 0
+
+              ? `
+                <div class="empty-state">
+
+                  <i class="bi bi-calendar-x"></i>
+
+                  <h3>
+                    No attendance records
+                  </h3>
+
+                  <p>
+                    No attendance has been recorded yet.
+                  </p>
+
+                </div>
+              `
+
+              : `
+
+                <div class="table-responsive">
+
+                  <table class="data-table">
+
+                    <thead>
+
+                      <tr>
+                        <th>Date</th>
+                        <th>Check In</th>
+                        <th>Check Out</th>
+                        <th>Working Hours</th>
+                        <th>Status</th>
+                        <th>Payable Day</th>
+                      </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                      ${attendanceRecords.map(record => `
+
+                        <tr>
+
+                          <td>
+                            ${
+                              record.attendance_date
+                                ? Components.formatDate(
+                                    record.attendance_date
+                                  )
+                                : '-'
+                            }
+                          </td>
+
+                          <td>
+                            ${record.check_in || '-'}
+                          </td>
+
+                          <td>
+                            ${record.check_out || '-'}
+                          </td>
+
+                          <td>
+                            ${
+                              record.working_hours != null
+                                ? `${record.working_hours} hrs`
+                                : '-'
+                            }
+                          </td>
+
+                          <td>
+                            ${
+                              Components.StatusBadge(
+                                record.status
+                              )
+                            }
+                          </td>
+
+                          <td>
+                            ${
+                              record.payable_day ??
+                              '-'
+                            }
+                          </td>
+
+                        </tr>
+
+                      `).join('')}
+
+                    </tbody>
+
+                  </table>
+
+                </div>
+
+              `
+            }
 
           </div>
 
         </div>
 
-      </div>
-
-    `;
-  },
-
-
-  /* ============================================================
-     CHECK IN
-     ============================================================ */
-
-  async handleCheckIn(employeeId) {
-
-    try {
-
-      await API.checkIn(
-        employeeId
-      );
-
-
-      App.showToast(
-        'Checked in successfully!',
-        'success'
-      );
-
-
-      App.navigate(
-        'emp-attendance'
-      );
+      `;
 
     } catch (error) {
 
       console.error(
-        'Check-in failed:',
+        'Failed to load attendance:',
         error
       );
 
+      return `
 
-      App.showToast(
-        error.message ||
-        'Unable to check in.',
-        'error'
-      );
+        ${Components.BackButton('emp-dashboard')}
 
-    }
-  },
+        <div class="card">
 
+          <div class="card-body">
 
-  /* ============================================================
-     CHECK OUT
-     ============================================================ */
+            <div class="empty-state">
 
-  async handleCheckOut(employeeId) {
+              <i class="bi bi-exclamation-triangle"></i>
 
-    try {
+              <h3>
+                Unable to load attendance
+              </h3>
 
-      await API.checkOut(
-        employeeId
-      );
+              <p>
+                ${error.message}
+              </p>
 
+            </div>
 
-      App.showToast(
-        'Checked out successfully!',
-        'success'
-      );
+          </div>
 
+        </div>
 
-      App.navigate(
-        'emp-attendance'
-      );
-
-    } catch (error) {
-
-      console.error(
-        'Check-out failed:',
-        error
-      );
-
-
-      App.showToast(
-        error.message ||
-        'Unable to check out.',
-        'error'
-      );
-
+      `;
     }
   },
 
@@ -1034,40 +848,19 @@ async renderAttendance(emp) {
 
     try {
 
-      const employeeId =
-        App.currentUser?.employee_id ||
-        App.currentUser?.id;
-
-
-      if (!employeeId) {
-        return;
-      }
-
-
       const attendanceRecords =
         await API.getAttendance(
-          employeeId
+          App.currentUser.id
         );
-
-
-      const records =
-        Array.isArray(attendanceRecords)
-          ? attendanceRecords
-          : [];
-
 
       const container =
         document.getElementById(
           'calendar-container'
         );
 
+      if (!container) return;
 
-      if (!container) {
-        return;
-      }
-
-
-      if (!records.length) {
+      if (!attendanceRecords.length) {
 
         container.innerHTML = `
 
@@ -1080,11 +873,11 @@ async renderAttendance(emp) {
                 <i class="bi bi-calendar-x"></i>
 
                 <h3>
-                  0 Attendance Records
+                  No attendance records
                 </h3>
 
                 <p>
-                  No attendance records have been recorded yet.
+                  No attendance has been recorded yet.
                 </p>
 
               </div>
@@ -1098,7 +891,6 @@ async renderAttendance(emp) {
         return;
       }
 
-
       container.innerHTML = `
 
         <div class="card">
@@ -1111,7 +903,6 @@ async renderAttendance(emp) {
 
           </div>
 
-
           <div class="card-body">
 
             <div class="table-responsive">
@@ -1121,22 +912,19 @@ async renderAttendance(emp) {
                 <thead>
 
                   <tr>
-
                     <th>Date</th>
                     <th>Check In</th>
                     <th>Check Out</th>
                     <th>Working Hours</th>
                     <th>Status</th>
                     <th>Payable Day</th>
-
                   </tr>
 
                 </thead>
 
-
                 <tbody>
 
-                  ${records.map(record => `
+                  ${attendanceRecords.map(record => `
 
                     <tr>
 
@@ -1199,331 +987,263 @@ async renderAttendance(emp) {
 
     } catch (error) {
 
-      console.warn(
-        'Attendance reload unavailable:',
-        error.message
+      console.error(
+        'Failed to reload attendance:',
+        error
       );
 
-      const container =
-        document.getElementById(
-          'calendar-container'
-        );
-
-
-      if (container) {
-
-        container.innerHTML = `
-
-          <div class="card">
-
-            <div class="card-body">
-
-              <div class="empty-state">
-
-                <i class="bi bi-calendar-x"></i>
-
-                <h3>
-                  0 Attendance Records
-                </h3>
-
-                <p>
-                  No attendance records have been recorded yet.
-                </p>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        `;
-      }
     }
   },
 
 
-/* ============================================================
-   LEAVE MANAGEMENT
-   SHOW ZERO LEAVE RECORDS
-   ============================================================ */
-
-async renderLeave(emp) {
-
-  return `
-
-    ${Components.BackButton('emp-dashboard')}
-
-    <div class="page-header">
-
-      <div>
-
-        <h1 class="page-title">
-          Leave Management
-        </h1>
-
-        <p class="page-subtitle">
-          View your leave requests and track their status
-        </p>
-
-      </div>
-
-      <div class="page-actions">
-
-        <button
-          class="btn btn-secondary"
-          onclick="EmployeeViews.exportLeaveReport()"
-        >
-          <i class="bi bi-download"></i>
-          Export Leave Report
-        </button>
-
-        <button
-          class="btn btn-primary"
-          onclick="EmployeeViews.openApplyLeaveModal()"
-        >
-          <i class="bi bi-plus-lg"></i>
-          Apply Leave
-        </button>
-
-      </div>
-
-    </div>
-
-
-    <!-- ======================================================
-         LEAVE SUMMARY
-         ====================================================== -->
-
-    <div class="grid-2 mb-3">
-
-      <div class="card">
-
-        <div class="card-body">
-
-          <div style="
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-          ">
-
-            <div>
-
-              <p style="
-                margin:0;
-                color:var(--slate-500);
-                font-size:0.875rem;
-              ">
-                Leave Requests
-              </p>
-
-              <h2 style="
-                margin:0.25rem 0 0;
-                font-size:1.75rem;
-                font-weight:700;
-              ">
-                0
-              </h2>
-
-            </div>
-
-            <div style="
-              width:42px;
-              height:42px;
-              border-radius:10px;
-              display:flex;
-              align-items:center;
-              justify-content:center;
-              background:var(--primary-light);
-            ">
-              <i class="bi bi-calendar2-minus"></i>
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="card-body">
-
-          <div style="
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-          ">
-
-            <div>
-
-              <p style="
-                margin:0;
-                color:var(--slate-500);
-                font-size:0.875rem;
-              ">
-                Total Leave Days
-              </p>
-
-              <h2 style="
-                margin:0.25rem 0 0;
-                font-size:1.75rem;
-                font-weight:700;
-              ">
-                0
-              </h2>
-
-            </div>
-
-            <div style="
-              width:42px;
-              height:42px;
-              border-radius:10px;
-              display:flex;
-              align-items:center;
-              justify-content:center;
-              background:var(--warning-light);
-            ">
-              <i class="bi bi-calendar-x"></i>
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <!-- ======================================================
-         LEAVE REQUEST HISTORY
-         ====================================================== -->
-
-    <div class="card mb-3">
-
-      <div class="card-header">
-
-        <h3 class="card-title">
-          Leave Requests History
-        </h3>
-
-      </div>
-
-      <div
-        class="card-body"
-        style="padding:0;"
-      >
-
-        <div class="empty-state">
-
-          <i class="bi bi-calendar-x"></i>
-
-          <h3>
-            No leave requests
-          </h3>
-
-          <p>
-            You have not submitted any leave requests yet.
-          </p>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  `;
-},
-
   /* ============================================================
-     LEAVE ZERO STATE
+     LEAVE MANAGEMENT
+     REAL BACKEND DATA ONLY
      ============================================================ */
 
-  renderLeaveZeroState() {
+  async renderLeave(emp) {
 
-    return `
+    try {
 
-      ${Components.BackButton('emp-dashboard')}
+      const requests =
+        await API.getEmployeeLeaves(emp.id);
 
+      console.log(
+        'REAL LEAVE DATA:',
+        requests
+      );
 
-      <div class="page-header">
+      const leaveRows =
+        requests.map(leave => {
 
-        <div>
+          const start =
+            new Date(leave.start_date);
 
-          <h1 class="page-title">
-            Leave Management
-          </h1>
+          const end =
+            new Date(leave.end_date);
 
-          <p class="page-subtitle">
-            View your leave requests and track their status
-          </p>
+          const days =
+            Math.floor(
+              (
+                end.getTime() -
+                start.getTime()
+              ) /
+              (1000 * 60 * 60 * 24)
+            ) + 1;
 
-        </div>
+          return {
 
+            id:leave.id,
 
-        <div class="page-actions">
+            type:
+              leave.leave_type_name ||
+              leave.leave_type ||
+              `Leave Type #${leave.leave_type_id}`,
 
-          <button
-            class="btn btn-secondary"
-            onclick="EmployeeViews.exportLeaveReport()"
-          >
+            startDate:
+              leave.start_date,
 
-            <i class="bi bi-download"></i>
+            endDate:
+              leave.end_date,
 
-            Export Leave Report
+            days,
 
-          </button>
+            reason:
+              leave.reason || '-',
 
+            status:
+              leave.status
 
-          <button
-            class="btn btn-primary"
-            onclick="EmployeeViews.openApplyLeaveModal()"
-          >
+          };
 
-            <i class="bi bi-plus-lg"></i>
-
-            Apply Leave
-
-          </button>
-
-        </div>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="card-header">
-
-          <h3 class="card-title">
-            Leave Requests History
-          </h3>
-
-        </div>
+        });
 
 
-        <div class="card-body">
+      const columns = [
 
-          <div class="empty-state">
+        {
+          label:'Leave Type',
+          key:'type',
+          className:'td-name'
+        },
 
-            <i class="bi bi-calendar-x"></i>
+        {
+          label:'Start Date',
+          key:'startDate',
+          render:r =>
+            Components.formatDate(
+              r.startDate
+            )
+        },
 
-            <h3>
-              0 Leave Requests
-            </h3>
+        {
+          label:'End Date',
+          key:'endDate',
+          render:r =>
+            Components.formatDate(
+              r.endDate
+            )
+        },
 
-            <p>
-              You have not submitted any leave requests yet.
+        {
+          label:'Days',
+          key:'days'
+        },
+
+        {
+          label:'Reason',
+          key:'reason'
+        },
+
+        {
+          label:'Status',
+          key:'status',
+          render:r =>
+            Components.StatusBadge(
+              r.status
+            )
+        }
+
+      ];
+
+
+      return `
+
+        ${Components.BackButton('emp-dashboard')}
+
+        <div class="page-header">
+
+          <div>
+
+            <h1 class="page-title">
+              Leave Management
+            </h1>
+
+            <p class="page-subtitle">
+              View your leave requests and track their status
             </p>
 
           </div>
 
+          <div class="page-actions">
+
+            <button
+              class="btn btn-secondary"
+              onclick="EmployeeViews.exportLeaveReport()"
+            >
+              <i class="bi bi-download"></i>
+              Export Leave Report
+            </button>
+
+            <button
+              class="btn btn-primary"
+              onclick="EmployeeViews.openApplyLeaveModal()"
+            >
+              <i class="bi bi-plus-lg"></i>
+              Apply Leave
+            </button>
+
+          </div>
+
         </div>
 
-      </div>
 
-    `;
+        <div class="card mb-3">
+
+          <div class="card-header">
+
+            <h3 class="card-title">
+              Leave Requests History
+            </h3>
+
+          </div>
+
+          <div
+            class="card-body"
+            style="padding:0;"
+          >
+
+            ${
+              leaveRows.length > 0
+
+              ? Components.DataTable({
+
+                  id:'emp-leave-table',
+
+                  columns,
+
+                  rows:leaveRows,
+
+                  searchPlaceholder:
+                    'Search leave requests...',
+
+                  filters:[
+                    {
+                      key:'status',
+                      label:'All Statuses',
+                      options:[
+                        'Pending',
+                        'Approved',
+                        'Rejected'
+                      ]
+                    }
+                  ]
+
+                })
+
+              : Components.EmptyState({
+
+                  icon:'calendar-x',
+
+                  title:'No leave requests',
+
+                  message:
+                    'You have not submitted any leave requests yet.'
+
+                })
+            }
+
+          </div>
+
+        </div>
+
+      `;
+
+    } catch (error) {
+
+      console.error(
+        'Failed to load leave data:',
+        error
+      );
+
+      return `
+
+        ${Components.BackButton('emp-dashboard')}
+
+        <div class="card">
+
+          <div class="card-body">
+
+            <div class="empty-state">
+
+              <i class="bi bi-exclamation-triangle"></i>
+
+              <h3>
+                Unable to load leave data
+              </h3>
+
+              <p>
+                ${error.message}
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      `;
+    }
   },
 
 
@@ -1538,11 +1258,7 @@ async renderLeave(emp) {
       const leaveTypes =
         await API.getLeaveTypes();
 
-
-      if (
-        !leaveTypes ||
-        !leaveTypes.length
-      ) {
+      if (!leaveTypes || !leaveTypes.length) {
 
         App.showToast(
           'No leave types are available.',
@@ -1554,30 +1270,24 @@ async renderLeave(emp) {
 
 
       const options =
-        leaveTypes
-          .map(type => {
+        leaveTypes.map(type => {
 
-            const id =
-              type.id;
+          const id =
+            type.id;
 
+          const name =
+            type.name ||
+            type.leave_type ||
+            type.type ||
+            `Leave Type #${id}`;
 
-            const name =
-              type.name ||
-              type.leave_type ||
-              type.type ||
-              `Leave Type #${id}`;
+          return `
+            <option value="${id}">
+              ${name}
+            </option>
+          `;
 
-
-            return `
-
-              <option value="${id}">
-                ${name}
-              </option>
-
-            `;
-
-          })
-          .join('');
+        }).join('');
 
 
       App.showModal(
@@ -1598,7 +1308,6 @@ async renderLeave(emp) {
               >
                 Leave Type
               </label>
-
 
               <select
                 id="leave-type"
@@ -1625,7 +1334,6 @@ async renderLeave(emp) {
                 type:'date',
                 required:true
               })}
-
 
               ${Components.FormInput({
                 id:'leave-end-date',
@@ -1661,13 +1369,10 @@ async renderLeave(emp) {
               <button
                 type="button"
                 class="btn btn-secondary"
-                onclick="
-                  App.closeModal('apply-leave-modal')
-                "
+                onclick="App.closeModal('apply-leave-modal')"
               >
                 Cancel
               </button>
-
 
               <button
                 type="submit"
@@ -1690,7 +1395,6 @@ async renderLeave(emp) {
         error
       );
 
-
       App.showToast(
         'Unable to load leave types.',
         'error'
@@ -1707,24 +1411,20 @@ async renderLeave(emp) {
 
     e.preventDefault();
 
-
     const leaveType =
       document.getElementById(
         'leave-type'
       ).value;
-
 
     const startDate =
       document.getElementById(
         'leave-start-date'
       ).value;
 
-
     const endDate =
       document.getElementById(
         'leave-end-date'
       ).value;
-
 
     const reason =
       document.getElementById(
@@ -1748,28 +1448,10 @@ async renderLeave(emp) {
     }
 
 
-    if (
-      endDate < startDate
-    ) {
+    if (endDate < startDate) {
 
       App.showToast(
         'End date cannot be before start date.',
-        'error'
-      );
-
-      return;
-    }
-
-
-    const employeeId =
-      App.currentUser?.employee_id ||
-      App.currentUser?.id;
-
-
-    if (!employeeId) {
-
-      App.showToast(
-        'Employee information is unavailable.',
         'error'
       );
 
@@ -1782,7 +1464,7 @@ async renderLeave(emp) {
       await API.applyLeave({
 
         employee_id:
-          employeeId,
+          App.currentUser.id,
 
         leave_type_id:
           Number(leaveType),
@@ -1803,16 +1485,16 @@ async renderLeave(emp) {
         'apply-leave-modal'
       );
 
-
       App.showToast(
         'Leave application submitted successfully!',
         'success'
       );
 
-
-      App.navigate(
-        'emp-leave'
-      );
+      /*
+        Reload the leave page so the newly-created
+        backend record appears immediately.
+      */
+      App.navigate('emp-leave');
 
     } catch (error) {
 
@@ -1820,7 +1502,6 @@ async renderLeave(emp) {
         'Failed to submit leave:',
         error
       );
-
 
       App.showToast(
         error.message ||
@@ -1842,62 +1523,17 @@ async renderLeave(emp) {
       const emp =
         App.currentUser;
 
-
-      const employeeId =
-        emp?.employee_id ||
-        emp?.id;
-
-
-      if (!employeeId) {
-
-        App.showToast(
-          'Employee information is unavailable.',
-          'error'
+      const requests =
+        await API.getEmployeeLeaves(
+          emp.id
         );
-
-        return;
-      }
-
-
-      let requests = [];
-
-
-      try {
-
-        const result =
-          await API.getEmployeeLeaves(
-            employeeId
-          );
-
-
-        requests =
-          Array.isArray(result)
-            ? result
-            : [];
-
-      } catch (error) {
-
-        /*
-         * No leave records should not prevent
-         * exporting a zero-record report.
-         */
-
-        console.warn(
-          'No leave records available:',
-          error.message
-        );
-
-        requests = [];
-      }
 
 
       let csv =
-        `Leave Report for ${emp.name || '-'} (${employeeId})\n`;
-
+        `Leave Report for ${emp.name} (${emp.id})\n`;
 
       csv +=
         `Generated Date,${new Date().toLocaleDateString()}\n\n`;
-
 
       csv +=
         `ID,Leave Type,Start Date,End Date,Days,Reason,Status\n`;
@@ -1906,16 +1542,10 @@ async renderLeave(emp) {
       requests.forEach(leave => {
 
         const start =
-          new Date(
-            leave.start_date
-          );
-
+          new Date(leave.start_date);
 
         const end =
-          new Date(
-            leave.end_date
-          );
-
+          new Date(leave.end_date);
 
         const days =
           Math.floor(
@@ -1934,13 +1564,13 @@ async renderLeave(emp) {
 
 
         csv +=
-          `"${leave.id || ''}",` +
+          `"${leave.id}",` +
           `"${type}",` +
-          `"${leave.start_date || ''}",` +
-          `"${leave.end_date || ''}",` +
+          `"${leave.start_date}",` +
+          `"${leave.end_date}",` +
           `"${days}",` +
           `"${leave.reason || ''}",` +
-          `"${leave.status || ''}"\n`;
+          `"${leave.status}"\n`;
 
       });
 
@@ -1948,48 +1578,26 @@ async renderLeave(emp) {
       const blob =
         new Blob(
           [csv],
-          {
-            type:'text/csv'
-          }
+          { type:'text/csv' }
         );
-
 
       const url =
-        URL.createObjectURL(
-          blob
-        );
-
+        URL.createObjectURL(blob);
 
       const a =
-        document.createElement(
-          'a'
-        );
-
+        document.createElement('a');
 
       a.href =
         url;
 
-
       a.download =
-        `Leave_Report_${employeeId}_${new Date()
+        `Leave_Report_${emp.id}_${new Date()
           .toISOString()
           .split('T')[0]}.csv`;
 
-
-      document.body.appendChild(
-        a
-      );
-
-
       a.click();
 
-
-      a.remove();
-
-
-      URL.revokeObjectURL(
-        url
-      );
+      URL.revokeObjectURL(url);
 
 
       App.showToast(
@@ -2003,7 +1611,6 @@ async renderLeave(emp) {
         'Failed to export leave report:',
         error
       );
-
 
       App.showToast(
         'Unable to export leave report.',
@@ -2024,11 +1631,9 @@ async renderLeave(emp) {
         emp.id
       );
 
-
     return `
 
       ${Components.BackButton('emp-dashboard')}
-
 
       <div class="page-header">
 
@@ -2056,38 +1661,37 @@ async renderLeave(emp) {
             ${
               mails.length > 0
 
-                ? mails.map(m =>
-                    Components.MailItem({
+              ? mails.map(m =>
+                  Components.MailItem({
 
-                      id:m.id,
+                    id:m.id,
 
-                      subject:m.subject,
+                    subject:m.subject,
 
-                      from:m.from,
+                    from:m.from,
 
-                      date:m.date,
+                    date:m.date,
 
-                      priority:m.priority,
+                    priority:m.priority,
 
-                      status:m.status,
+                    status:m.status,
 
-                      preview:
-                        (m.message || '')
-                          .substring(0,80),
+                    preview:
+                      m.message.substring(0,80),
 
-                      onClick:
-                        'EmployeeViews.openMailDetail'
-
-                    })
-                  ).join('')
-
-                : Components.EmptyState({
-
-                    icon:'inbox',
-
-                    title:'No work mail received'
+                    onClick:
+                      'EmployeeViews.openMailDetail'
 
                   })
+                ).join('')
+
+              : Components.EmptyState({
+
+                  icon:'inbox',
+
+                  title:'No work mail received'
+
+                })
             }
 
           </div>
@@ -2100,10 +1704,6 @@ async renderLeave(emp) {
   },
 
 
-  /* ============================================================
-     OPEN WORK MAIL
-     ============================================================ */
-
   openMailDetail(mailId) {
 
     const mails =
@@ -2111,20 +1711,14 @@ async renderLeave(emp) {
         App.currentUser.id
       );
 
-
     const mail =
       mails.find(
         m => m.id === mailId
       );
 
+    if (!mail) return;
 
-    if (!mail) {
-      return;
-    }
-
-
-    mail.status =
-      'Read';
+    mail.status = 'Read';
 
 
     App.showModal(
@@ -2147,25 +1741,18 @@ async renderLeave(emp) {
               font-size:0.875rem;
               font-weight:600;
             ">
-
-              From:
-              ${mail.from}
-
+              From: ${mail.from}
             </div>
-
 
             <div style="
               font-size:0.75rem;
               color:var(--slate-500);
             ">
-
               Date:
               ${Components.formatDate(mail.date)}
-
             </div>
 
           </div>
-
 
           ${Components.PriorityBadge(mail.priority)}
 
@@ -2179,9 +1766,7 @@ async renderLeave(emp) {
           color:var(--slate-800);
           margin-bottom:1.5rem;
         ">
-
           ${mail.message}
-
         </div>
 
 
@@ -2198,7 +1783,6 @@ async renderLeave(emp) {
             Action Options:
           </h4>
 
-
           <div style="
             display:flex;
             gap:0.5rem;
@@ -2214,13 +1798,9 @@ async renderLeave(emp) {
                 )
               "
             >
-
               <i class="bi bi-check-circle"></i>
-
               Mark as Done
-
             </button>
-
 
             <button
               class="btn btn-primary btn-sm"
@@ -2230,13 +1810,9 @@ async renderLeave(emp) {
                 )
               "
             >
-
               <i class="bi bi-chat-text"></i>
-
               Send Feedback
-
             </button>
-
 
             <button
               class="btn btn-warning btn-sm"
@@ -2246,11 +1822,8 @@ async renderLeave(emp) {
                 )
               "
             >
-
               <i class="bi bi-arrow-counterclockwise"></i>
-
               Request Redo
-
             </button>
 
           </div>
@@ -2273,10 +1846,6 @@ async renderLeave(emp) {
   },
 
 
-  /* ============================================================
-     MAIL ACTION
-     ============================================================ */
-
   handleMailAction(
     mailId,
     action,
@@ -2288,59 +1857,68 @@ async renderLeave(emp) {
         App.currentUser.id
       );
 
-
     const mail =
       mails.find(
         m => m.id === mailId
       );
 
-
-    if (!mail) {
-      return;
-    }
+    if (!mail) return;
 
 
-    if (
-      action === 'Done'
-    ) {
+    if (action === 'Done') {
 
       mail.status =
         'Completed';
 
+      if (mail.assignmentId) {
+
+        const asn =
+          MockData.assignments.find(
+            a =>
+              a.id === mail.assignmentId
+          );
+
+        if (asn) {
+          asn.status =
+            'Completed';
+        }
+      }
 
       App.showToast(
         'Work marked as Completed!',
         'success'
       );
 
-    }
-
-
-    else if (
-      action === 'Feedback'
-    ) {
+    } else if (action === 'Feedback') {
 
       App.showToast(
         `Feedback sent to HR: "${extra}"`,
         'success'
       );
 
-    }
-
-
-    else if (
-      action === 'Redo'
-    ) {
+    } else if (action === 'Redo') {
 
       mail.status =
         'Redo Requested';
 
+      if (mail.assignmentId) {
+
+        const asn =
+          MockData.assignments.find(
+            a =>
+              a.id === mail.assignmentId
+          );
+
+        if (asn) {
+          asn.status =
+            'Redo Requested';
+        }
+      }
 
       App.showToast(
         'Redo requested with reason. HR has been notified.',
         'warning'
       );
-
     }
 
 
@@ -2348,26 +1926,17 @@ async renderLeave(emp) {
       'mail-detail-modal'
     );
 
-
     App.closeModal(
       'feedback-modal'
     );
-
 
     App.closeModal(
       'redo-modal'
     );
 
-
-    App.navigate(
-      'emp-mail'
-    );
+    App.navigate('emp-mail');
   },
 
-
-  /* ============================================================
-     FEEDBACK MODAL
-     ============================================================ */
 
   openFeedbackModal(mailId) {
 
@@ -2407,7 +1976,6 @@ async renderLeave(emp) {
             Cancel
           </button>
 
-
           <button
             type="button"
             class="btn btn-primary"
@@ -2432,7 +2000,6 @@ async renderLeave(emp) {
         'feedback-text'
       ).value;
 
-
     if (!text) {
 
       App.showToast(
@@ -2443,7 +2010,6 @@ async renderLeave(emp) {
       return;
     }
 
-
     EmployeeViews.handleMailAction(
       mailId,
       'Feedback',
@@ -2451,10 +2017,6 @@ async renderLeave(emp) {
     );
   },
 
-
-  /* ============================================================
-     REDO MODAL
-     ============================================================ */
 
   openRedoModal(mailId) {
 
@@ -2494,7 +2056,6 @@ async renderLeave(emp) {
             Cancel
           </button>
 
-
           <button
             type="button"
             class="btn btn-warning"
@@ -2519,7 +2080,6 @@ async renderLeave(emp) {
         'redo-reason'
       ).value;
 
-
     if (!text) {
 
       App.showToast(
@@ -2529,7 +2089,6 @@ async renderLeave(emp) {
 
       return;
     }
-
 
     EmployeeViews.handleMailAction(
       mailId,
@@ -2541,18 +2100,18 @@ async renderLeave(emp) {
 
   /* ============================================================
      ASSIGNMENTS
-     BACKEND DOES NOT CURRENTLY PROVIDE ASSIGNMENTS
      ============================================================ */
 
   renderAssignments(emp) {
 
-    const assignments = [];
-
+    const assignments =
+      MockData.getEmployeeAssignments(
+        emp.id
+      );
 
     return `
 
       ${Components.BackButton('emp-dashboard')}
-
 
       <div class="page-header">
 
@@ -2571,39 +2130,43 @@ async renderLeave(emp) {
       </div>
 
 
-      <div>
+      <div style="
+        display:flex;
+        flex-direction:column;
+        gap:0.75rem;
+      ">
 
         ${
           assignments.length > 0
 
-            ? assignments.map(a =>
-                Components.AssignmentCard({
+          ? assignments.map(a =>
+              Components.AssignmentCard({
 
-                  id:a.id,
+                id:a.id,
 
-                  title:a.title,
+                title:a.title,
 
-                  dueDate:a.dueDate,
+                dueDate:a.dueDate,
 
-                  priority:a.priority,
+                priority:a.priority,
 
-                  status:a.status,
+                status:a.status,
 
-                  sender:a.sender,
+                sender:a.sender,
 
-                  onClick:
-                    'EmployeeViews.openAssignmentDetail'
-
-                })
-              ).join('')
-
-            : Components.EmptyState({
-
-                icon:'card-checklist',
-
-                title:'No assignments found'
+                onClick:
+                  'EmployeeViews.openAssignmentDetail'
 
               })
+            ).join('')
+
+          : Components.EmptyState({
+
+              icon:'card-checklist',
+
+              title:'No assignments found'
+
+            })
         }
 
       </div>
@@ -2614,13 +2177,202 @@ async renderLeave(emp) {
 
   openAssignmentDetail(asnId) {
 
-    return;
+    const assignments =
+      MockData.getEmployeeAssignments(
+        App.currentUser.id
+      );
+
+    const asn =
+      assignments.find(
+        a => a.id === asnId
+      );
+
+    if (!asn) return;
+
+
+    App.showModal(
+      'assignment-detail-modal',
+      asn.title,
+      `
+
+        <div class="detail-row">
+          <span class="detail-label">
+            Assigned By
+          </span>
+
+          <span class="detail-value fw-600">
+            ${asn.sender}
+          </span>
+        </div>
+
+
+        <div class="detail-row">
+          <span class="detail-label">
+            Assigned Date
+          </span>
+
+          <span class="detail-value">
+            ${Components.formatDate(asn.assignedDate)}
+          </span>
+        </div>
+
+
+        <div class="detail-row">
+          <span class="detail-label">
+            Due Date
+          </span>
+
+          <span class="detail-value">
+            ${Components.formatDate(asn.dueDate)}
+          </span>
+        </div>
+
+
+        <div class="detail-row">
+          <span class="detail-label">
+            Priority
+          </span>
+
+          <span class="detail-value">
+            ${Components.PriorityBadge(asn.priority)}
+          </span>
+        </div>
+
+
+        <div class="detail-row">
+          <span class="detail-label">
+            Current Status
+          </span>
+
+          <span class="detail-value">
+            ${Components.StatusBadge(asn.status)}
+          </span>
+        </div>
+
+
+        <div
+          class="detail-row"
+          style="
+            flex-direction:column;
+            gap:0.5rem;
+            margin-top:0.5rem;
+          "
+        >
+
+          <span class="detail-label">
+            Instructions
+          </span>
+
+          <span
+            class="detail-value"
+            style="line-height:1.5;"
+          >
+            ${asn.description}
+          </span>
+
+        </div>
+
+
+        <div style="
+          border-top:1px solid var(--card-border);
+          padding-top:1rem;
+          margin-top:1rem;
+        ">
+
+          <h4 style="
+            font-size:0.8125rem;
+            font-weight:600;
+            margin-bottom:0.75rem;
+          ">
+            Actions:
+          </h4>
+
+          <div style="
+            display:flex;
+            gap:0.5rem;
+            flex-wrap:wrap;
+          ">
+
+            <button
+              class="btn btn-success btn-sm"
+              onclick="
+                EmployeeViews.markAssignmentComplete(
+                  '${asn.id}'
+                )
+              "
+            >
+              <i class="bi bi-check-lg"></i>
+              Mark Completed
+            </button>
+
+            <button
+              class="btn btn-primary btn-sm"
+              onclick="
+                EmployeeViews.openAssignmentFeedback(
+                  '${asn.id}'
+                )
+              "
+            >
+              <i class="bi bi-chat-text"></i>
+              Send Feedback
+            </button>
+
+            <button
+              class="btn btn-warning btn-sm"
+              onclick="
+                EmployeeViews.openAssignmentRedo(
+                  '${asn.id}'
+                )
+              "
+            >
+              <i class="bi bi-arrow-counterclockwise"></i>
+              Request Redo
+            </button>
+
+          </div>
+
+        </div>
+
+      `,
+      `
+        <button
+          class="btn btn-secondary"
+          onclick="
+            App.closeModal('assignment-detail-modal')
+          "
+        >
+          Close
+        </button>
+      `,
+      true
+    );
   },
 
 
   markAssignmentComplete(asnId) {
 
-    return;
+    const asn =
+      MockData.assignments.find(
+        a => a.id === asnId
+      );
+
+    if (!asn) return;
+
+    asn.status =
+      'Completed';
+
+    App.showToast(
+      'Assignment marked as Completed!',
+      'success'
+    );
+
+    App.closeModal(
+      'assignment-detail-modal'
+    );
+
+    App.navigate(
+      'emp-assignments'
+    );
   },
 
 
@@ -2662,7 +2414,6 @@ async renderLeave(emp) {
             Cancel
           </button>
 
-
           <button
             type="button"
             class="btn btn-primary"
@@ -2689,7 +2440,6 @@ async renderLeave(emp) {
         'asn-feedback-text'
       ).value;
 
-
     if (!text) {
 
       App.showToast(
@@ -2700,15 +2450,17 @@ async renderLeave(emp) {
       return;
     }
 
-
     App.showToast(
       'Feedback submitted to HR!',
       'success'
     );
 
-
     App.closeModal(
       'asn-feedback-modal'
+    );
+
+    App.closeModal(
+      'assignment-detail-modal'
     );
   },
 
@@ -2751,7 +2503,6 @@ async renderLeave(emp) {
             Cancel
           </button>
 
-
           <button
             type="button"
             class="btn btn-warning"
@@ -2778,7 +2529,6 @@ async renderLeave(emp) {
         'asn-redo-text'
       ).value;
 
-
     if (!text) {
 
       App.showToast(
@@ -2789,24 +2539,32 @@ async renderLeave(emp) {
       return;
     }
 
+    const asn =
+      MockData.assignments.find(
+        a => a.id === asnId
+      );
+
+    if (asn) {
+      asn.status =
+        'Redo Requested';
+    }
 
     App.showToast(
       'Redo request submitted to HR!',
       'warning'
     );
 
-
     App.closeModal(
       'asn-redo-modal'
+    );
+
+    App.closeModal(
+      'assignment-detail-modal'
+    );
+
+    App.navigate(
+      'emp-assignments'
     );
   }
 
 };
-
-
-/* ============================================================
-   GLOBAL
-   ============================================================ */
-
-window.EmployeeViews =
-  EmployeeViews;

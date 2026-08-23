@@ -13,6 +13,10 @@ router = APIRouter(
 )
 
 
+# ------------------------------------------------------------
+# EMPLOYEES
+# ------------------------------------------------------------
+
 @router.get("/employees")
 def get_all_employees(
     db: Session = Depends(get_db),
@@ -20,7 +24,26 @@ def get_all_employees(
 ):
     employees = db.query(EmployeeProfile).all()
 
-    return employees
+    return [
+        {
+            "employee_id": employee.employee_id,
+            "first_name": employee.first_name,
+            "last_name": employee.last_name,
+            "email": employee.email,
+            "phone": employee.phone,
+            "address": employee.address,
+            "date_of_birth": employee.date_of_birth,
+            "department": employee.department,
+            "designation": employee.designation,
+            "joining_date": employee.joining_date,
+            "profile_picture": employee.profile_picture,
+            "role": employee.role,
+            "must_change_password": employee.must_change_password,
+            "created_at": employee.created_at,
+            "updated_at": employee.updated_at
+        }
+        for employee in employees
+    ]
 
 
 @router.get("/employees/{employee_id}")
@@ -39,7 +62,20 @@ def get_employee(
             detail="Employee not found"
         )
 
-    return employee
+    return {
+        "employee_id": employee.employee_id,
+        "first_name": employee.first_name,
+        "last_name": employee.last_name,
+        "email": employee.email,
+        "phone": employee.phone,
+        "address": employee.address,
+        "date_of_birth": employee.date_of_birth,
+        "department": employee.department,
+        "designation": employee.designation,
+        "joining_date": employee.joining_date,
+        "profile_picture": employee.profile_picture,
+        "role": employee.role
+    }
 
 
 @router.delete("/employees/{employee_id}")
@@ -72,6 +108,10 @@ def delete_employee(
         "employee_id": employee_id
     }
 
+
+# ------------------------------------------------------------
+# LEAVES
+# ------------------------------------------------------------
 
 @router.get("/leaves")
 def get_all_leave_requests(
